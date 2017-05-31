@@ -1,0 +1,8 @@
+{
+  "name": "Eventsoup",
+  "description": "Back-end da aplicação",
+  "image": "heroku/python",
+  "repository": "https://github.com/marcelsan/eventsoup-backend",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ]
+}
