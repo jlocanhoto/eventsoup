@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-db_from_ev = dj_database_url.config(conn_max_age=500)
+# db_from_ev = dj_database_url.config(conn_max_age=500)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -90,16 +90,16 @@ WSGI_APPLICATION = 'eventsoup.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-# 	    'default': {
-# 	        'ENGINE': 'django.db.backends.postgresql',
-# 	        'NAME': 'd6gs83dvv13b78',
-# 	        'USER': 'hqqduloesglecc',
-# 	        'PASSWORD': 'ac57e896d6882b5cf955b7c625d9af109d0be42fd5fec05f5f2b300b959e852a',
-# 	        'HOST': 'ec2-54-225-68-71.compute-1.amazonaws.com',
-# 	        'PORT': '5432',
-# 	    }
-# 	}
+DATABASES = {
+	    'default': {
+	        'ENGINE': 'django.db.backends.postgresql',
+	        'NAME': 'd6gs83dvv13b78',
+	        'USER': 'hqqduloesglecc',
+	        'PASSWORD': 'ac57e896d6882b5cf955b7c625d9af109d0be42fd5fec05f5f2b300b959e852a',
+	        'HOST': 'ec2-54-225-68-71.compute-1.amazonaws.com',
+	        'PORT': '5432',
+	    }
+	}
 
 
 # Password validation
@@ -160,8 +160,8 @@ REST_FRAMEWORK = {
 
 # DATABASES['default'] =  dj_database_url.config()
 
-DATABASES = { 'default': db_from_ev,
-            }
+# DATABASES = { 'default': db_from_ev,
+#             }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
