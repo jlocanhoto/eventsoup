@@ -21,3 +21,4 @@ six==1.10.0
 static3==0.7.0
 uritemplate==3.0.0
 whitenoise==2.0.6
+djangorestframework-jwt==1.10.0
