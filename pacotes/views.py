@@ -61,3 +61,9 @@ class ItemPacoteViewSet(viewsets.ModelViewSet):
         utilizado para adicionar o item criado ao pacote informado na url
         """
         serializer.save(pacote=self.pacote)
+
+class ListPacotes(ListAPIView):
+    permission_classes = [PacotePermission]
+    serializer_class = PacoteSerializer
+    model = Pacote
+    queryset = Pacote.objects.all()
