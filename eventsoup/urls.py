@@ -17,7 +17,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
-from django.contrib.auth.views import logout
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,5 +26,4 @@ urlpatterns = [
     url(r'^pacotes/', include("pacotes.urls", namespace="pacotes")),
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^api-token-refresh/', refresh_jwt_token),
-    url(r'^api-logout/$', logout, {'next_page': '/usuarios/'}),
 ]

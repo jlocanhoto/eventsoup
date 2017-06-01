@@ -70,6 +70,20 @@ pytz==2017.2
 https://eventsoup-backend.herokuapp.com/
 ```
 
+## Login
+
+Fazer login na plataforma e receber um token para fazer as outras requisições
+```
+/api-token-auth/ --> Método POST
+itens no json:
+- cpf_cnpj (String)
+- password (String)
+
+Resposta:
+- token (String)
+```
+Este token deve ser guardado para ser utilizado nas demais requisições à aplicação
+
 ## Usuário Contratante
 Criar
 ```
@@ -82,10 +96,17 @@ itens no json:
 - endereco (String)
 - password1 (String)
 - password2 (String)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Ver informações
 ```
 /usuarios/crud-contratante/<slug_do_usuário>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Editar
 ```
@@ -96,10 +117,16 @@ itens no json:
 - telefone (String)
 - cpf_cnpj (String)
 - endereco (String)
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Deletar
 ```
 /usuarios/crud-contratante/<slug_do_usuário>/ --> Método DELETE
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 ## Usuário Fornecedor Buffer
 Criar
@@ -118,6 +145,9 @@ itens no json:
 Ver informações
 ```
 /usuarios/crud-fornecedor-buffet/<slug_do_usuário>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Editar
 ```
@@ -129,10 +159,17 @@ itens no json:
 - cpf_cnpj (String)
 - endereco (String)
 - faz_entrega (boolean)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Deletar
 ```
 /usuarios/crud-fornecedor-buffet/<slug_do_usuário>/ --> Método DELETE
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 
 ## Evento
@@ -146,10 +183,17 @@ itens no json:
 - local (String)
 - restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - orcamento (float)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Ver informações
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Editar
 ```
@@ -161,14 +205,24 @@ itens no json:
 - local (String)
 - restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - orcamento (float)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Deletar
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método DELETE
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Listar eventos criados pelo usuário
 ```
 /eventos/crud-eventos/list-owner-eventos/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 ## Itens
 Criar
@@ -176,20 +230,34 @@ Criar
 /pacotes/crud-itens/ --> Método POST
 itens no json:
 - nome (String)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Ver informações
 ```
 /pacotes/crud-itens/<slug_do_evento>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Editar
 ```
 /pacotes/crud-itens/<slug_do_evento>/ --> Método PUT
 itens no json:
 - nome (String)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Deletar
 ```
 /pacotes/crud-itens/<slug_do_evento>/ --> Método DELETE
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 ## Pacote
 Criar
@@ -200,10 +268,17 @@ itens no json:
 - quantidade_pessoas (int)
 - restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - preco (float)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Ver informações
 ```
 /pacotes/crud-pacotes/<slug_do_evento>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Editar
 ```
@@ -213,10 +288,17 @@ itens no json:
 - quantidade_pessoas (int)
 - restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - preco (float)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Deletar
 ```
 /pacotes/crud-pacotes/<slug_do_evento>/ --> Método DELETE
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 ## Item do Pacote
 Colocar item no pacote
@@ -225,10 +307,17 @@ Colocar item no pacote
 itens no json:
 - item (int -> id do item)
 - quantidade_item (int)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Ver itens do pacote
 ```
 /pacotes/crud-item-pacote/<slug_do_pacote>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Editar item de um pacote
 ```
@@ -236,8 +325,15 @@ Editar item de um pacote
 itens no json:
 - item (int -> id do item)
 - quantidade_item (int)
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Deletar
 ```
 /pacotes/crud-item-pacote/<slug_do_pacote>/<slug_do_item_pacote>/ --> Método DELETE
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
