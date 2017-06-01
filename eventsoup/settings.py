@@ -161,11 +161,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-# DATABASES['default'] =  dj_database_url.config()
-
-# DATABASES = { 'default': db_from_ev,
-#             }
-
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
@@ -175,3 +170,7 @@ JWT_AUTH = {
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=15),
     'JWT_ALLOW_REFRESH': True,
 }
+try:
+    from .local_settings import *
+except ImportError:
+    pass

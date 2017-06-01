@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
-from .models import FornecedorBuffer, Contratante
+from .models import FornecedorBuffet, Contratante
 
-class FornecedorBufferSerializer(serializers.ModelSerializer):
+class FornecedorBuffetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FornecedorBuffer
+        model = FornecedorBuffet
         fields = ('slug', 'nome','email','telefone','cpf_cnpj','endereco','faz_entrega')
         read_only_fields = ('slug',)
 
-class FornecedorBufferCreateSerializer(serializers.ModelSerializer):
+class FornecedorBuffetCreateSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(label='Senha', write_only=True)
     password2 = serializers.CharField(label='Confirmar Senha', write_only=True)
 
@@ -27,13 +27,13 @@ class FornecedorBufferCreateSerializer(serializers.ModelSerializer):
         senha = validated_data.get('password1','')
         validated_data.pop('password1')
         validated_data.pop('password2')
-        instance = super(FornecedorBufferCreateSerializer, self).create(validated_data)
+        instance = super(FornecedorBuffetCreateSerializer, self).create(validated_data)
         instance.set_password(senha)
         instance.save()
         return instance
 
     class Meta:
-        model = FornecedorBuffer
+        model = FornecedorBuffet
         fields = ('nome','email','telefone','cpf_cnpj','endereco','faz_entrega', 'password1', 'password2')
 
 class ContratanteSerializer(serializers.ModelSerializer):
@@ -43,7 +43,7 @@ class ContratanteSerializer(serializers.ModelSerializer):
         fields = ('slug', 'nome','email','telefone','cpf_cnpj','endereco')
         read_only_fields = ('slug',)
 
-class ContratanteCreateSerializer(FornecedorBufferCreateSerializer):
+class ContratanteCreateSerializer(FornecedorBuffetCreateSerializer):
 
     class Meta:
         model = Contratante

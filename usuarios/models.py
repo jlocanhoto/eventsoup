@@ -79,13 +79,13 @@ class Contratante(Usuario):
         verbose_name = 'Contratante'
         verbose_name_plural = 'Contratantes'
 
-class FornecedorBuffer(Usuario):
+class FornecedorBuffet(Usuario):
 
     faz_entrega = models.BooleanField('Faz entrega')
 
     class Meta:
-        verbose_name = 'Fornecedor (Buffer)'
-        verbose_name_plural = 'Fornecedores (Buffer)'
+        verbose_name = 'Fornecedor (Buffet)'
+        verbose_name_plural = 'Fornecedores (Buffet)'
 
 class Entregador(Usuario):
 

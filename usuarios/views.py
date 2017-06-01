@@ -1,20 +1,20 @@
 from rest_framework import viewsets
-from .models import FornecedorBuffer, Contratante
-from .serializers import FornecedorBufferSerializer, FornecedorBufferCreateSerializer, ContratanteSerializer, ContratanteCreateSerializer
+from .models import FornecedorBuffet, Contratante
+from .serializers import FornecedorBuffetSerializer, FornecedorBuffetCreateSerializer, ContratanteSerializer, ContratanteCreateSerializer
 from .permissions import UsuarioPermission
 from .models import Usuario
 
-class FornecedorBufferViewSet(viewsets.ModelViewSet):
+class FornecedorBuffetViewSet(viewsets.ModelViewSet):
 
     lookup_field = 'slug'
-    queryset = FornecedorBuffer.objects.all()
-    serializer_class = FornecedorBufferSerializer
+    queryset = FornecedorBuffet.objects.all()
+    serializer_class = FornecedorBuffetSerializer
     permission_classes = [UsuarioPermission]
 
     def get_serializer_class(self):
-        serializer_class = super(FornecedorBufferViewSet, self).get_serializer_class()
+        serializer_class = super(FornecedorBuffetViewSet, self).get_serializer_class()
         if self.request.method == 'POST':
-            serializer_class = FornecedorBufferCreateSerializer
+            serializer_class = FornecedorBuffetCreateSerializer
 
         return serializer_class
 

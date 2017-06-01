@@ -22,6 +22,23 @@ $ ls
 eventsoup README.md requirements.txt
 $ pip install -r requirements.txt
 ```
+* Após instalado todos as dependencias, agora vamos criar um arquivo de configurações para o banco de dados local:
+> No diretorio do arquivo settings.py, deve-se criar um arquivo com o nome local_settings.py
+> Dentro do arquivo deve ser colocado o seguinte código:
+```python
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+DEBUG = True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+```
 
 * Após instalar todas as dependencias, agora vamos rodar nosso projeto:
 > no mesmo diretório e com a env ativada, vamos entrar na pasta 'eventsoup' que contem o arquivo '[manage.py](https://docs.djangoproject.com/en/1.11/ref/django-admin/)' e rodar o projeto na porta 8080:
@@ -47,6 +64,11 @@ pytz==2017.2
 ```
 
 # Rotas
+
+## URL do servidor
+```
+https://eventsoup-backend.herokuapp.com/
+```
 
 ## Usuário Contratante
 Criar
@@ -82,7 +104,7 @@ Deletar
 ## Usuário Fornecedor Buffer
 Criar
 ```
-/usuarios/crud-fornecedor-buffer/ --> Método POST
+/usuarios/crud-fornecedor-buffet/ --> Método POST
 itens no json:
 - nome (String)
 - email (String)
@@ -95,11 +117,11 @@ itens no json:
 ```
 Ver informações
 ```
-/usuarios/crud-fornecedor-buffer/<slug_do_usuário>/ --> Método GET
+/usuarios/crud-fornecedor-buffet/<slug_do_usuário>/ --> Método GET
 ```
 Editar
 ```
-/usuarios/crud-fornecedor-buffer/<slug_do_usuário>/ --> Método PUT
+/usuarios/crud-fornecedor-buffet/<slug_do_usuário>/ --> Método PUT
 itens no json:
 - nome (String)
 - email (String)
@@ -110,7 +132,7 @@ itens no json:
 ```
 Deletar
 ```
-/usuarios/crud-fornecedor-buffer/<slug_do_usuário>/ --> Método DELETE
+/usuarios/crud-fornecedor-buffet/<slug_do_usuário>/ --> Método DELETE
 ```
 
 ## Evento
