@@ -94,10 +94,10 @@ WSGI_APPLICATION = 'eventsoup.wsgi.application'
 DATABASES = {
 	    'default': {
 	        'ENGINE': 'django.db.backends.postgresql',
-	        'NAME': 'd6gs83dvv13b78',
-	        'USER': 'hqqduloesglecc',
-	        'PASSWORD': 'ac57e896d6882b5cf955b7c625d9af109d0be42fd5fec05f5f2b300b959e852a',
-	        'HOST': 'ec2-54-225-68-71.compute-1.amazonaws.com',
+	        'NAME': 'd27v66bmh91sci',
+	        'USER': 'rpsszpiwazvkjk',
+	        'PASSWORD': '4c6f36720788e8efe553819a8d1abccb722c837c7b1aafa090c76819994474f3',
+	        'HOST': 'ec2-50-19-218-160.compute-1.amazonaws.com',
 	        'PORT': '5432',
 	    }
 	}
