@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from .models import FornecedorBuffer, Contratante
 from .serializers import FornecedorBufferSerializer, FornecedorBufferCreateSerializer, ContratanteSerializer, ContratanteCreateSerializer
 from .permissions import UsuarioPermission
+from .models import Usuario
 
 class FornecedorBufferViewSet(viewsets.ModelViewSet):
 
