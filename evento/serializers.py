@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import Evento, Endereco
 
 class EventoSerializer(serializers.ModelSerializer):
-    endereco = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # endereco = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Evento

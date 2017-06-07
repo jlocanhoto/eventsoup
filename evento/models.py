@@ -30,7 +30,7 @@ class Endereco(models.Model):
     estado = models.CharField('Estado', max_length = 20)
     cep = models.CharField('CEP', max_length = 15)
     numero = models.CharField('Número', max_length = 10)
-    evento = models.ForeignKey(Evento, verbose_name='Local do evento', related_name = 'endereco', on_delete=models.CASCADE)
+    evento = models.OneToOneField(Evento, verbose_name='Local do evento', related_name = 'endereco', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Endereço'
