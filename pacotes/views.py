@@ -59,3 +59,9 @@ class ItemPacoteViewSet(viewsets.ModelViewSet):
         """
         pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug_pacote',''))
         serializer.save(pacote=pacote)
+
+class ListPacotes(ListAPIView):
+    permission_classes = [PacotePermission]
+    serializer_class = PacoteSerializer
+    model = Pacote
+    queryset = Pacote.objects.all()

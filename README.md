@@ -115,10 +115,6 @@ itens no json:
 - cpf_cnpj (String)
 - password1 (String)
 - password2 (String)
-
-conteudo de autorização:
-- Authorization (String)
-a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 Ver informações
 ```
@@ -147,7 +143,7 @@ conteudo de autorização:
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 
-## Usuário Fornecedor Buffer
+## Usuário Fornecedor Buffet
 Criar
 ```
 /usuarios/crud-fornecedor-buffet/ --> Método POST
@@ -399,6 +395,13 @@ itens no json:
 - restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - preco (float)
 
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Lista todos os pacotes
+```
+/pacotes/list-all-pacotes/ --> Método GET
 conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
