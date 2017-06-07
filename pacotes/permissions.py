@@ -31,8 +31,11 @@ class ItemPacotePermission(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_staff:
             return True
-        if request.method in ('GET', 'HEAD', 'OPTIONS'):
+        if request.method in ('GET', 'HEAD', 'OPTIONS','POST'):
             return True
-        if request.method in ('PUT', 'DELETE','PATCH','POST'):
-            return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.pacote.dono.cpf_cnpj)
+        if request.method in ('PUT', 'DELETE','PATCH'):
+            try:
+                return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().pacote.dono.cpf_cnpj)
+            except:
+                return False
         return False

@@ -45,19 +45,17 @@ class ItemPacoteViewSet(viewsets.ModelViewSet):
     serializer_class = ItemPacoteSerializer
     permission_classes = [ItemPacotePermission]
 
-    def dispatch(self, request, *args, **kwargs):
-        self.pacote = get_object_or_404(Pacote, slug=kwargs.get('slug_produto',''))
-        return super(ItemPacoteViewSet, self).dispatch(request, args, kwargs)
-
     def get_queryset(self):
         """
         utilizado para retornar apenas os itens e quantidade deste item do pacote
         informado na url
         """
-        return ItemPacote.objects.filter(pacote=self.pacote)
+        pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug_pacote',''))
+        return ItemPacote.objects.filter(pacote=pacote)
 
     def perform_create(self, serializer):
         """
         utilizado para adicionar o item criado ao pacote informado na url
         """
-        serializer.save(pacote=self.pacote)
+        pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug_pacote',''))
+        serializer.save(pacote=pacote)

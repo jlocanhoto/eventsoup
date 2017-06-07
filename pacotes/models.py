@@ -9,7 +9,7 @@ class Pacote(models.Model):
                   ('regional', 'Regional'))
     restricoes = models.CharField('Tipo do Pacote', choices=RESTRICOES, max_length = 50)
     preco = models.FloatField('Preço do Pacote')
-    slug = AutoSlugField('Slug', populate_from='nome', unique_with=('preco'), unique=True)
+    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('preco'), unique=True)
     dono = models.ForeignKey(Usuario, verbose_name = 'Dono do Pacote', related_name = 'pacotes')
 
     class Meta:
@@ -22,7 +22,7 @@ class Pacote(models.Model):
 class Item(models.Model):
     nome = models.CharField('Nome do Item', max_length=200)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador do Item', related_name = 'itens')
-    slug = AutoSlugField('Slug', populate_from='nome', unique=True)
+    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
 
     class Meta:
         verbose_name = 'Item'
@@ -35,7 +35,7 @@ class ItemPacote(models.Model):
     item = models.ForeignKey(Item, verbose_name='Item', related_name = 'itens_pacote')
     quantidade_item = models.PositiveIntegerField('Quantidade')
     pacote = models.ForeignKey(Pacote, verbose_name = 'Pacote do Item', related_name = 'itens')
-    slug = AutoSlugField('Slug', populate_from='item', unique=True)
+    slug = AutoSlugField('Slug', populate_from='item', always_update=True, unique=True)
 
     class Meta:
         verbose_name = 'Quantidade-Item'
