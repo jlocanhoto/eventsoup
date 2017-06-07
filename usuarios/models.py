@@ -48,11 +48,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('Email', unique = True)
     telefone = models.CharField('Telefone', max_length = 30)
     cpf_cnpj = models.CharField('CPF/CNPJ', max_length = 30, unique = True)
-    endereco = models.CharField('Endereço', max_length = 200)
     is_staff = models.BooleanField('Staff Status',default=False)
     is_active = models.BooleanField('Ativo', default=True)
     date_joined = models.DateTimeField('Data de Cadastro', default=timezone.now)
-    slug = AutoSlugField('Slug', populate_from='nome', unique_with=('date_joined'), unique=True)
+    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('date_joined'), unique=True)
 
     USERNAME_FIELD = 'cpf_cnpj'
     REQUIRED_FIELDS = ['email']
@@ -72,6 +71,19 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     @classmethod
     def normalize_cpf_cnpj(cls, cpf_cnpj):
         return unicodedata.normalize('NFKC', force_text(cpf_cnpj))
+
+class Endereco(models.Model):
+    rua = models.CharField('Rua', max_length = 250)
+    bairro = models.CharField('Bairro', max_length = 100)
+    cidade = models.CharField('Cidade', max_length = 50)
+    estado = models.CharField('Estado', max_length = 20)
+    cep = models.CharField('CEP', max_length = 15)
+    numero = models.CharField('Número', max_length = 10)
+    usuario = models.ForeignKey(Usuario, verbose_name='Endereço do usuário', related_name = 'endereco', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Endereço'
+        verbose_name_plural = 'Endereços'
 
 class Contratante(Usuario):
 
