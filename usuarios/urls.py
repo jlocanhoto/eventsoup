@@ -4,6 +4,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'crud-fornecedor-buffet', views.FornecedorBuffetViewSet)
+router.register(r'crud-usuario-endereco', views.EnderecoViewSet)
 router.register(r'crud-contratante', views.ContratanteViewSet)
 
 urlpatterns = [

@@ -1,11 +1,13 @@
 from rest_framework import serializers
 
-from .models import FornecedorBuffet, Contratante
+from .models import FornecedorBuffet, Contratante, Endereco
 
 class FornecedorBuffetSerializer(serializers.ModelSerializer):
+    endereco = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     class Meta:
         model = FornecedorBuffet
-        fields = ('slug', 'nome','email','telefone','cpf_cnpj','endereco','faz_entrega')
+        fields = ('slug', 'nome','email','telefone','cpf_cnpj','faz_entrega','endereco')
         read_only_fields = ('slug',)
 
 class FornecedorBuffetCreateSerializer(serializers.ModelSerializer):
@@ -34,9 +36,10 @@ class FornecedorBuffetCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FornecedorBuffet
-        fields = ('nome','email','telefone','cpf_cnpj','endereco','faz_entrega', 'password1', 'password2')
+        fields = ('nome','email','telefone','cpf_cnpj','faz_entrega', 'password1', 'password2')
 
 class ContratanteSerializer(serializers.ModelSerializer):
+    endereco = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Contratante
@@ -47,4 +50,17 @@ class ContratanteCreateSerializer(FornecedorBuffetCreateSerializer):
 
     class Meta:
         model = Contratante
-        fields = ('nome','email','telefone','cpf_cnpj','endereco', 'password1', 'password2')
+        fields = ('nome','email','telefone','cpf_cnpj', 'password1', 'password2')
+
+class EnderecoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Endereco
+        fields = ('id','rua','bairro','cidade','estado','cep','numero', 'usuario')
+        read_only_fields = ('id',)
+
+class EnderecoCreateSerializer(EnderecoSerializer):
+
+    class Meta:
+        model = Endereco
+        fields = ('rua','bairro','cidade','estado','cep','numero')
