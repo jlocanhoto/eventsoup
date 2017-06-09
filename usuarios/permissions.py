@@ -10,7 +10,10 @@ class UsuarioPermission(BasePermission):
         if request.method in ('GET', 'HEAD', 'OPTIONS'):
             return True
         if request.method in ('PUT', 'DELETE','PATCH'):
-            return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().cpf_cnpj)
+            try:
+                return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().cpf_cnpj)
+            except:
+                return False
         return False
 
 class EnderecoPermission(BasePermission):
@@ -23,5 +26,8 @@ class EnderecoPermission(BasePermission):
         if request.method in ('GET', 'HEAD', 'OPTIONS'):
             return True
         if request.method in ('PUT', 'DELETE','PATCH'):
-            return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().usuario.cpf_cnpj)
+            try:
+                return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().usuario.cpf_cnpj)
+            except:
+                return False
         return False

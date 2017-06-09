@@ -10,7 +10,10 @@ class ItemPermission(BasePermission):
         if request.method in ('GET', 'HEAD', 'OPTIONS'):
             return True
         if request.method in ('PUT', 'DELETE','PATCH'):
-            return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().criador.cpf_cnpj)
+            try:
+                return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().criador.cpf_cnpj)
+            except:
+                return False
         return False
 
 class PacotePermission(BasePermission):
@@ -23,7 +26,10 @@ class PacotePermission(BasePermission):
         if request.method in ('GET', 'HEAD', 'OPTIONS'):
             return True
         if request.method in ('PUT', 'DELETE','PATCH'):
-            return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().dono.cpf_cnpj)
+            try:
+                return request.user and (request.user.is_staff or request.user.cpf_cnpj == view.get_object().dono.cpf_cnpj)
+            except:
+                return False
         return False
 
 class ItemPacotePermission(BasePermission):

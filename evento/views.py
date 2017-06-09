@@ -23,7 +23,10 @@ class EventoViewSet(viewsets.ModelViewSet):
         serializer.save(criador=self.request.user)
 
     def get_queryset(self):
-        return Evento.objects.filter(criador=self.request.user)
+        try:
+            return Evento.objects.filter(criador=self.request.user)
+        except:
+            return []
 
 class ListOwnerEventos(ListAPIView):
     permission_classes = [ListOwnerEventosPermission]
@@ -32,7 +35,10 @@ class ListOwnerEventos(ListAPIView):
     queryset = Evento.objects.all()
 
     def get_queryset(self):
-        return self.request.user.eventos.all()
+        try:
+            return self.request.user.eventos.all()
+        except:
+            return []
 
 class EnderecoViewSet(viewsets.ModelViewSet):
 
