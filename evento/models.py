@@ -9,7 +9,7 @@ class Evento(models.Model):
     data = models.DateTimeField('Data do Evento')
     RESTRICOES = (('vegetariano', 'Vegetariano'),
                   ('regional', 'Regional'))
-    restricoes = models.CharField('Tipos de Alimentos', choices=RESTRICOES, max_length = 50)
+    restricoes = models.CharField('Tipos de Alimentos', choices=RESTRICOES, max_length = 50, null=True, blank=True)
     orcamento = models.FloatField('Orçamento para o Evento')
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('data'), unique=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador', related_name = 'eventos')
