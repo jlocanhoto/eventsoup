@@ -30,7 +30,6 @@ class EnderecoPermission(BasePermission):
         if request.method in ('POST','GET','HEAD','OPTIONS'):
             try:
                 evento = Evento.objects.get(slug=view.kwargs['slug_evento'])
-                print(evento.criador.cpf_cnpj == request.user.cpf_cnpj)
                 return request.user and (request.user.is_staff or request.user.cpf_cnpj == evento.criador.cpf_cnpj)
             except:
                 return False

@@ -19,8 +19,6 @@ class EventoPacoteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         serializers.raise_errors_on_nested_writes('update', self, validated_data)
-        print(self.__dict__)
-        print(validated_data)
         for pacote in validated_data['pacotes']: 
             instance.pacotes.add(pacote)
         return instance

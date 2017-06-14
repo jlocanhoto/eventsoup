@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView, GenericAPIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from .models import Evento, Endereco
 from .serializers import EventoSerializer, EventoPacoteSerializer, EventoRemoverPacoteSerializer, PacotesEventoSerializer, EnderecoSerializer, EnderecoCreateSerializer
@@ -95,3 +97,22 @@ class PacotesEvento(ListAPIView):
     def get_queryset(self):
         evento = get_object_or_404(Evento, slug=self.kwargs.get('slug',''))
         return evento.pacotes.all()
+
+class ConfirmaEntregaEvento(APIView):
+
+    def post(self, request):
+        slug_evento = request.data['slug_evento']
+        cpf_cnpj_inicio = request.data['tres_digitos_cpf_cnpj']
+
+        evento = evento = get_object_or_404(Evento, slug=slug_evento)
+
+        if evento.criador.cpf_cnpj.startswith(cpf_cnpj_inicio):
+            content = {'valid': True}
+            # evento.entregue = True
+            # evento.save()
+        else:
+            content = {'valid': False}
+
+        # analisar se precisa persistir no banco a validação da "entrega" do pacote ao evento
+
+        return Response(content)
