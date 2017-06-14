@@ -46,7 +46,17 @@ class PacoteViewSet(viewsets.ModelViewSet):
         """
         utilizado para adicionar o usuário que criou o evento como criador do evento
         """
-        serializer.save(dono=self.request.user)
+        valid = True
+        code = ''
+
+        while valid:
+            code = ''.join(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVXWYZ') for i in range(4))
+            pacote = Pacote.objects.filter(dono=self.request.user).filter(codigo=code)
+
+            if len(pacote) == 0:
+                valid = False   
+
+        serializer.save(dono=self.request.user, codigo=code)
 
 class ItemPacoteViewSet(viewsets.ModelViewSet):
 
@@ -76,44 +86,15 @@ class ListPacotes(ListAPIView):
     model = Pacote
     queryset = Pacote.objects.all()
 
-
-# class PacoteSeleciondo(ListAPIView):
-    # queryset = Item.objects.all()
-    # serializer_class = ItemSerializer
-    # permission_classes = [PacotePermission]
-
-    # def get_queryset(self):
-    #     """
-    #     utilizado para retornar apenas os itens e quantidade deste item do pacote
-    #     informado na url
-    #     """
-    #     pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug',''))
-    #     item_pacotes = ItemPacote.objects.filter(pacote=pacote)
-    #     code = ''.join(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVXWYZ') for i in range(4))
-    #     lista = []
-
-    #     for x in item_pacotes:
-    #         lista.append(x.item)
-
-    #     dictionary = {'code': code, 'lista': lista}
-
-    #     # return lista
-    #     return dictionary
-
 class PacoteSelecionado(APIView):
     
     def get(self, request, slug):
-        pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug',''))
+        pacote = get_object_or_404(Pacote, slug=slug)
         item_pacotes = ItemPacote.objects.filter(pacote=pacote)
 
         lista = [x.item.as_json() for x in item_pacotes]
-
-        if len(lista) > 0:
-            # apenas gerando o codigo, nao realizando persistencia
-            code = ''.join(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVXWYZ') for i in range(4))
-            content = {'code': code, 'itens': lista}
-        else:
-            content = {'itens': lista}
+        
+        content = {'code': pacote.codigo, 'itens': lista}
 
         return Response(content)
 

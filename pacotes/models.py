@@ -11,6 +11,7 @@ class Pacote(models.Model):
     preco = models.FloatField('Preço do Pacote')
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('preco'), unique=True)
     dono = models.ForeignKey(Usuario, verbose_name = 'Dono do Pacote', related_name = 'pacotes')
+    codigo = models.CharField('Código do Pacote', max_length=5, unique=True)
 
     class Meta:
         verbose_name = 'Pacote'

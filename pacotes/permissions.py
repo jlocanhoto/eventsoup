@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from .models import Pacote
 
 class ItemPermission(BasePermission):
 
@@ -37,7 +38,13 @@ class ItemPacotePermission(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_staff:
             return True
-        if request.method in ('GET', 'HEAD', 'OPTIONS','POST'):
+        if request.method in ('POST'):
+            try:
+                pacote = Pacote.objects.get(slug=view.kwargs['slug_pacote'])
+                return request.user and (request.user.is_staff or request.user.cpf_cnpj == pacote.dono.cpf_cnpj)
+            except:
+                return False
+        if request.method in ('GET', 'HEAD', 'OPTIONS'):
             return True
         if request.method in ('PUT', 'DELETE','PATCH'):
             try:
