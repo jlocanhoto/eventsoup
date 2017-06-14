@@ -104,15 +104,22 @@ class ConfirmaEntregaEvento(APIView):
         slug_evento = request.data['slug_evento']
         cpf_cnpj_inicio = request.data['tres_digitos_cpf_cnpj']
 
-        evento = evento = get_object_or_404(Evento, slug=slug_evento)
+        if len(cpf_cnpj_inicio) == 3:
+            evento = evento = get_object_or_404(Evento, slug=slug_evento)
 
-        if evento.criador.cpf_cnpj.startswith(cpf_cnpj_inicio):
-            content = {'valid': True}
-            # evento.entregue = True
-            # evento.save()
+            if evento.entregue == False:
+                if evento.criador.cpf_cnpj.startswith(cpf_cnpj_inicio):
+                    content = {'entregue': True, 'message': 'Event delivered'}
+                    evento.entregue = True
+                    evento.save()
+                else:
+                    content = {'entregue': False, 'message': 'Incorrect CPF'}
+            else:
+                content = {'entregue': True, 'message': 'Event already delivered'}
+
+            # analisar se precisa persistir no banco a validação da "entrega" do pacote ao evento
+
+            return Response(content)
+
         else:
-            content = {'valid': False}
-
-        # analisar se precisa persistir no banco a validação da "entrega" do pacote ao evento
-
-        return Response(content)
+            return Response({'message': 'Must be the first three numbers of the CPF'}, status=400)

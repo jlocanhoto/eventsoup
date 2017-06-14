@@ -7,8 +7,8 @@ class EventoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Evento
-        fields = ('slug', 'nome','quantidade_pessoas','data','restricoes','orcamento','criador','pacotes','endereco')
-        read_only_fields = ('slug','criador','pacotes','endereco')
+        fields = ('slug', 'nome','quantidade_pessoas','data','restricoes','orcamento','criador','entregue','pacotes','endereco')
+        read_only_fields = ('slug','criador','entregue','pacotes','endereco')
 
 class EventoPacoteSerializer(serializers.ModelSerializer):
 

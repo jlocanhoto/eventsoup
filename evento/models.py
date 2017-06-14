@@ -13,6 +13,7 @@ class Evento(models.Model):
     orcamento = models.FloatField('Orçamento para o Evento')
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('data'), unique=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador', related_name = 'eventos')
+    entregue = models.BooleanField('Pacote entregue ao evento', default=False)
 
     pacotes = models.ManyToManyField(Pacote, verbose_name='Pacotes do Evento', related_name = 'pacotes')
 
