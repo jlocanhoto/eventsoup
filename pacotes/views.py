@@ -1,10 +1,20 @@
 from django.shortcuts import get_object_or_404
+
 from rest_framework import viewsets
 from rest_framework import mixins
 from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from django.utils.encoding import force_text
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.serializers import serialize
+
 from .models import Item, Pacote, ItemPacote
 from .serializers import ItemSerializer, PacoteSerializer, ItemPacoteSerializer
 from .permissions import ItemPermission, PacotePermission, ItemPacotePermission
+
+import random
 
 class ItemViewSet(viewsets.ModelViewSet):
 
@@ -65,3 +75,50 @@ class ListPacotes(ListAPIView):
     serializer_class = PacoteSerializer
     model = Pacote
     queryset = Pacote.objects.all()
+
+
+# class PacoteSeleciondo(ListAPIView):
+    # queryset = Item.objects.all()
+    # serializer_class = ItemSerializer
+    # permission_classes = [PacotePermission]
+
+    # def get_queryset(self):
+    #     """
+    #     utilizado para retornar apenas os itens e quantidade deste item do pacote
+    #     informado na url
+    #     """
+    #     pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug',''))
+    #     item_pacotes = ItemPacote.objects.filter(pacote=pacote)
+    #     code = ''.join(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVXWYZ') for i in range(4))
+    #     lista = []
+
+    #     for x in item_pacotes:
+    #         lista.append(x.item)
+
+    #     dictionary = {'code': code, 'lista': lista}
+
+    #     # return lista
+    #     return dictionary
+
+class PacoteSelecionado(APIView):
+    
+    def get(self, request, slug):
+        pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug',''))
+        item_pacotes = ItemPacote.objects.filter(pacote=pacote)
+
+        lista = [x.item.as_json() for x in item_pacotes]
+
+        if len(lista) > 0:
+            # apenas gerando o codigo, nao realizando persistencia
+            code = ''.join(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVXWYZ') for i in range(4))
+            content = {'code': code, 'itens': lista}
+        else:
+            content = {'itens': lista}
+
+        return Response(content)
+
+class LazyEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, YourCustomType):
+            return force_text(obj)
+        return super(LazyEncoder, self).default(obj)

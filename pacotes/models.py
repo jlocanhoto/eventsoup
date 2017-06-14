@@ -31,11 +31,19 @@ class Item(models.Model):
     def __str__(self):
         return str(self.nome)
 
+    def as_json(self):
+        return dict(
+                id=self.id,
+                slug=self.slug,
+                nome=self.nome,
+                criador=self.criador.id
+            )
+
 class ItemPacote(models.Model):
     item = models.ForeignKey(Item, verbose_name='Item', related_name = 'itens_pacote')
     quantidade_item = models.PositiveIntegerField('Quantidade')
     pacote = models.ForeignKey(Pacote, verbose_name = 'Pacote do Item', related_name = 'itens')
-    slug = AutoSlugField('Slug', populate_from='item', always_update=True, unique=True)
+    slug = AutoSlugField('Slug', populate_from='id', always_update=True, unique=True)
 
     class Meta:
         verbose_name = 'Quantidade-Item'

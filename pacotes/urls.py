@@ -9,5 +9,6 @@ router.register(r'crud-item-pacote/(?P<slug_pacote>[^/.]+)', views.ItemPacoteVie
 
 urlpatterns = [
     url(r'list-all-pacotes/$', views.ListPacotes.as_view(),name = 'list-all-pacotes'),
+    url(r'pacote-selecionado/(?P<slug>[^/.]+)', views.PacoteSelecionado.as_view(), name='pacote-selecionado'),
     url(r'', include(router.urls)),
 ]
