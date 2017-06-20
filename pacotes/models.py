@@ -13,6 +13,9 @@ class Pacote(models.Model):
     dono = models.ForeignKey(Usuario, verbose_name = 'Dono do Pacote', related_name = 'pacotes')
     codigo = models.CharField('Código do Pacote', max_length=5, unique=True)
 
+    # itens = models.ManyToManyField(Item, verbose_name='Itens do pacote', related_name = 'itens')
+    # seria um ManyToManyField com ItemPacote, mas sem o id do Pacote como está, apenas o item e a qtde (?)
+
     class Meta:
         verbose_name = 'Pacote'
         verbose_name_plural = 'Pacotes'
