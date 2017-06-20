@@ -112,6 +112,7 @@ itens no json:
 - nome (String)
 - email (String)
 - telefone (String)
+- celular (String)
 - cpf_cnpj (String)
 - password1 (String)
 - password2 (String)
@@ -130,6 +131,7 @@ itens no json:
 - nome (String)
 - email (String)
 - telefone (String)
+- celular (String)
 - cpf_cnpj (String)
 conteudo de autorização:
 - Authorization (String)
@@ -151,6 +153,7 @@ itens no json:
 - nome (String)
 - email (String)
 - telefone (String)
+- celular (String)
 - cpf_cnpj (String)
 - faz_entrega (boolean)
 - password1 (String)
@@ -170,6 +173,7 @@ itens no json:
 - nome (String)
 - email (String)
 - telefone (String)
+- celular (String)
 - cpf_cnpj (String)
 - faz_entrega (boolean)
 
@@ -237,6 +241,7 @@ itens no json:
 - data (String)
 - restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - orcamento (float)
+- descrição (String)
 
 conteudo de autorização:
 - Authorization (String)
@@ -258,6 +263,7 @@ itens no json:
 - data (String)
 - restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - orcamento (float)
+- descrição (String)
 
 conteudo de autorização:
 - Authorization (String)
