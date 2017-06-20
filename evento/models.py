@@ -4,18 +4,19 @@ from usuarios.models import Usuario
 from pacotes.models import Pacote
 
 class Evento(models.Model):
-    nome = models.CharField('Evento', max_length=200)
-    quantidade_pessoas = models.PositiveIntegerField('Quantidade de Pessoas')
-    data = models.DateTimeField('Data do Evento')
+    nome = models.CharField('Nome do evento', max_length=200)
+    quantidade_pessoas = models.PositiveIntegerField('Quantidade de pessoas')
+    data = models.DateTimeField('Data do evento')
     RESTRICOES = (('vegetariano', 'Vegetariano'),
                   ('regional', 'Regional'))
-    restricoes = models.CharField('Tipos de Alimentos', choices=RESTRICOES, max_length = 50, null=True, blank=True)
-    orcamento = models.FloatField('Orçamento para o Evento')
+    restricoes = models.CharField('Tipos de alimentos', choices=RESTRICOES, max_length = 50, null=True, blank=True)
+    orcamento = models.FloatField('Orçamento para o evento')
+    descricao = models.CharField('Descrição', max_length=400, blank=True)
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('data'), unique=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador', related_name = 'eventos')
     entregue = models.BooleanField('Pacote entregue ao evento', default=False)
 
-    pacotes = models.ManyToManyField(Pacote, verbose_name='Pacotes do Evento', related_name = 'pacotes')
+    pacotes = models.ManyToManyField(Pacote, verbose_name='Pacotes do evento', related_name = 'pacotes')
 
     class Meta:
         verbose_name = 'Evento'
