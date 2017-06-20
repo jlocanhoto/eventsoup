@@ -47,10 +47,11 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     nome = models.CharField('Nome', max_length = 100)
     email = models.EmailField('Email', unique = True)
     telefone = models.CharField('Telefone', max_length = 30)
+    celular = models.CharField('Celular', max_length = 30)
     cpf_cnpj = models.CharField('CPF/CNPJ', max_length = 30, unique = True)
-    is_staff = models.BooleanField('Staff Status',default=False)
+    is_staff = models.BooleanField('Staff status',default=False)
     is_active = models.BooleanField('Ativo', default=True)
-    date_joined = models.DateTimeField('Data de Cadastro', default=timezone.now)
+    date_joined = models.DateTimeField('Data de cadastro', default=timezone.now)
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('date_joined'), unique=True)
 
     USERNAME_FIELD = 'cpf_cnpj'
