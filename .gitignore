@@ -100,3 +100,6 @@ ENV/
 
 # banco de dados
 *.sqlite3
+
+
+.vscode/
