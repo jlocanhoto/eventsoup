@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Evento, Endereco
-from .serializers import EventoSerializer, EventoPacoteSerializer, EventoRemoverPacoteSerializer, PacotesEventoSerializer, EnderecoSerializer, EnderecoCreateSerializer
+from .serializers import EventoSerializer, EventoPacoteSerializer, EventoRemoverPacoteSerializer, PacotesEventoSerializer, EnderecoSerializer, EnderecoCreateSerializer, EventoAtualizaEstatusSerializer
 from .permissions import EventoPermission, ListOwnerEventosPermission, EnderecoPermission
 
 from pacotes.serializers import PacoteSerializer
@@ -123,3 +123,17 @@ class ConfirmaEntregaEvento(APIView):
 
         else:
             return Response({'message': 'Must be the first three numbers of the CPF'}, status=400)
+
+
+
+class EventoAtualizaEstatus(UpdateAPIView):
+
+    lookup_field = 'slug'
+    model = Evento
+    # queryset = Evento.objects.all()
+    serializer_class = EventoAtualizaEstatusSerializer
+    permission_classes = [EventoPermission]
+
+    def get_object(self):
+        
+        return get_object_or_404(Evento, slug=self.kwargs.get('slug',''))

@@ -9,7 +9,7 @@ class Pacote(models.Model):
                   ('regional', 'Regional'))
     restricoes = models.CharField('Tipo do Pacote', choices=RESTRICOES, max_length = 50)
     preco = models.FloatField('Preço do Pacote')
-    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('preco'), unique=True)
+    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
     dono = models.ForeignKey(Usuario, verbose_name = 'Dono do Pacote', related_name = 'pacotes')
     codigo = models.CharField('Código do Pacote', max_length=5, unique=True)
     codigo_pag_seguro = models.CharField('Código do Pag Seguro', max_length=32, unique=True)

@@ -12,10 +12,10 @@ class Evento(models.Model):
     restricoes = models.CharField('Tipos de alimentos', choices=RESTRICOES, max_length = 50, null=True, blank=True)
     orcamento = models.FloatField('Orçamento para o evento')
     descricao = models.CharField('Descrição', max_length=400, blank=True)
-    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('data'), unique=True)
+    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador', related_name = 'eventos')
     entregue = models.BooleanField('Pacote entregue ao evento', default=False)
-
+    estatus = models.CharField('Estatus da compra', max_length=40, default="Aguardando pagamento")
     pacotes = models.ManyToManyField(Pacote, verbose_name='Pacotes do evento', related_name = 'pacotes')
 
     class Meta:
