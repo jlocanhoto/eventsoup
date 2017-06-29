@@ -52,7 +52,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField('Staff status',default=False)
     is_active = models.BooleanField('Ativo', default=True)
     date_joined = models.DateTimeField('Data de cadastro', default=timezone.now)
-    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('date_joined'), unique=True)
+    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
 
     USERNAME_FIELD = 'cpf_cnpj'
     REQUIRED_FIELDS = ['email']
