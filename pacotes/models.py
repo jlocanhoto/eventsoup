@@ -5,9 +5,9 @@ from usuarios.models import Usuario
 class Pacote(models.Model):
     nome = models.CharField('Nome do Pacote', max_length=200)
     quantidade_pessoas = models.PositiveIntegerField('Quantidade de Pessoas')
-    RESTRICOES = (('vegetariano', 'Vegetariano'),
+    # RESTRICOES = (('vegetariano', 'Vegetariano'),
                   ('regional', 'Regional'))
-    restricoes = models.CharField('Tipo do Pacote', choices=RESTRICOES, max_length = 50)
+    # restricoes = models.CharField('Tipo do Pacote', choices=RESTRICOES, max_length = 50)
     preco = models.FloatField('Preço do Pacote')
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
     dono = models.ForeignKey(Usuario, verbose_name = 'Dono do Pacote', related_name = 'pacotes')
