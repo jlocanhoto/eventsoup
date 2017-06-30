@@ -8,7 +8,7 @@ class Evento(models.Model):
     quantidade_pessoas = models.PositiveIntegerField('Quantidade de pessoas')
     data = models.DateTimeField('Data do evento')
     # RESTRICOES = (('vegetariano', 'Vegetariano'),
-                  ('regional', 'Regional'))
+                #   ('regional', 'Regional'))
     # restricoes = models.CharField('Tipos de alimentos', choices=RESTRICOES, max_length = 50, null=True, blank=True)
     orcamento = models.FloatField('Orçamento para o evento')
     descricao = models.CharField('Descrição', max_length=400, blank=True)
