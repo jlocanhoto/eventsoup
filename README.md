@@ -259,7 +259,7 @@ Modelo do json:
 				"id": id_item_1,
 				"quantidade_ite": quantidade_item_1
 			},
-			...
+			//...
 		]
 	}
 }
