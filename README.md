@@ -4,7 +4,7 @@
 ## Configurando e rodando o projeto.
 *  _clone o repositório no seu computador:_
 ```sh
-git clone https://github.com/marcelsan/eventsoup-backend.git
+https://github.com/jailson-dias/eventsoup.git
 ```
 * Em seguida crie um ambiente virtual na sua máquina para comportar todas as libs requeridas para o funcionamento correto da aplicação:
 > Usaremos python 3 no nosso projeto.
@@ -81,6 +81,8 @@ static3==0.7.0
 uritemplate==3.0.0
 whitenoise==2.0.6
 djangorestframework-jwt==1.10.0
+django-cors-headers==2.1.0
+xmltodict==0.9.2
 ```
 
 # Rotas
@@ -235,18 +237,35 @@ a string de autorização deve começar com "JWT" seguido de espaço e o token r
 Criar
 ```
 /eventos/crud-eventos/ --> Método POST
-itens no json:
-- nome (String)
-- quantidade_pessoas (int)
-- data (String)
-- restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
-- orcamento (float)
-- descrição (String)
-
 conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
+Modelo do json:
+```json
+{
+	"nome": "nome_do_evento",
+	"quantidade_pessoas": quantidade_pessoas,
+	"data": "yyyy-mm-ddTHH:MM:SSZ",
+	"orcamento": orcamento,
+	"descricao": "descricao_do_evento",
+	"pacotes": {
+		"nome": "nome_do_pacote",
+		"quantidade_pessoas": quantidade_pessoas,
+		"preco": preco,
+		"fornecedor": id_fornecedor,
+		"itens": [
+			{
+				"id": id_item_1,
+				"quantidade_ite": quantidade_item_1
+			},
+			...
+		]
+	}
+}
+```
+Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float.
+
 Ver informações
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método GET
@@ -261,7 +280,6 @@ itens no json:
 - nome (String)
 - quantidade_pessoas (int)
 - data (String)
-- restricoes (Apenas as Strings 'Vegetariano' ou 'Regional')
 - orcamento (float)
 - descrição (String)
 
@@ -326,35 +344,6 @@ conteudo de autorização:
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 
-## Evento e Pacotes
-Adicionar pacote para o evento
-```
-/eventos/montar-evento/<slug_do_evento>/ --> Método POST
-itens no json:
-- pacote (int -> id do pacote) [um ou mais]
-
-conteudo de autorização:
-- Authorization (String)
-a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
-```
-Ver pacotes do evento
-```
-/eventos/pacotes-evento/<slug_do_evento>/ --> Método GET
-conteudo de autorização:
-- Authorization (String)
-a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
-```
-Deletar pacote do evento
-```
-/eventos/remover-pacote-evento/<slug_do_evento>/ --> Método PUT
-itens no json:
-- pacote (int -> id do pacote) [um ou mais]
-
-conteudo de autorização:
-- Authorization (String)
-a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
-```
-
 ## Itens
 Criar
 ```
@@ -395,7 +384,37 @@ conteudo de autorização:
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 
-## Pacote
+
+## Evento e Pacotes (Rota depreciada)
+Adicionar pacote para o evento
+```
+/eventos/montar-evento/<slug_do_evento>/ --> Método POST
+itens no json:
+- pacote (int -> id do pacote) [um ou mais]
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Ver pacotes do evento
+```
+/eventos/pacotes-evento/<slug_do_evento>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Deletar pacote do evento
+```
+/eventos/remover-pacote-evento/<slug_do_evento>/ --> Método PUT
+itens no json:
+- pacote (int -> id do pacote) [um ou mais]
+
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+
+## Pacote (Rota depreciada)
 Criar
 ```
 /pacotes/crud-pacotes/ --> Método POST
@@ -444,7 +463,7 @@ conteudo de autorização:
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
 
-## Item do Pacote
+## Item do Pacote (Rota depreciada)
 Colocar item no pacote
 ```
 /pacotes/crud-item-pacote/<slug_do_pacote>/ --> Método POST
@@ -481,3 +500,11 @@ conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
+
+# Observações
+
+Algumas das rotas indicadas como depreciadas já estão sendo feitas na rota de criação de um Evento:
+ - Criar um Pacote
+ - Criar um ItemPacote
+
+As demais se encontram depreciadas por não fazerem parte da lógica da API.
