@@ -198,6 +198,18 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
 )
 
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CHECKOUT = 'https://ws.sandbox.pagseguro.uol.com.br/v2/checkout/'
+NOTIFICATIONS = 'https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/notifications/'
+EMAIL = 'nilson.delimajr@gmail.com'
+SENDER_EMAIL = 'c53559369476170245025@sandbox.pagseguro.com.br'
+TOKEN_ACCOUNT = 'F62303D851DF4417A53EF811CC48806A'
+
+
 try:
     from .local_settings import *
 except ImportError:

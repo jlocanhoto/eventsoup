@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PagSeguro Teste (compra)</title>
+	</head>
+  <style>
+  </style>
+	<body>
+    {% if checkoutCode %}
+      <h2>{{checkoutCode}}</h2>
+      <button id={{checkoutCode}}><span>Comprar</span></button>
+    {% endif %}
+
+		<script type="text/javascript" src="https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.lightbox.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+      var code = d3.select("button").attr("id");
+      d3.select("button")
+        .on("click", function(){
+            var lightbox = PagSeguroLightbox({
+								                code: code
+								              },
+								              {
+								                success: function(transactionCode){
+								                    alert("Operação de pagamento efetuada com sucesso. Aguardar confirmação do pagseguro.");
+								                },
+								                abort: function(){
+								                    alert("Operação de pagamento não efetuada.");
+								                }
+								           });
+
+						if(!lightbox){
+								location.href = "https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html?code=" + code;
+						}
+        })
+    </script>
+  </body>
+</html>

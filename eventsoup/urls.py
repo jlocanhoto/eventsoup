@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^usuarios/', include("usuarios.urls", namespace="usuarios")),
     url(r'^eventos/', include("evento.urls", namespace="eventos")),
     url(r'^pacotes/', include("pacotes.urls", namespace="pacotes")),
+    url(r'^pagseguro/', include("pagseguro.urls", namespace="pagseguro")),
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^api-token-refresh/', refresh_jwt_token),
 ]
