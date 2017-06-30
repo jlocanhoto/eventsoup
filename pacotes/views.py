@@ -114,17 +114,15 @@ class LazyEncoder(DjangoJSONEncoder):
         return super(LazyEncoder, self).default(obj)
 
 class GeradorCodigo():
-    def codigo_pedido(pk_fornecedor):
+    def codigo_pedido(fornecedor):
         valid = True
         code = ''
-
         while valid:
             code = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvxwyzABCDEFGHIJKLMNOPQRSTUVXWYZ') for i in range(4))
             pacote = Pacote.objects.filter(dono_id=fornecedor).filter(codigo=code)
-
+            
             if len(pacote) == 0:
                 valid = False
-
         return code
 
     def codigo_pag_seguro():
