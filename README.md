@@ -361,6 +361,8 @@ Criar
 /pacotes/crud-itens/ --> Método POST
 itens no json:
 - nome (String)
+- preco (float)
+- descricao (String)
 
 conteudo de autorização:
 - Authorization (String)
@@ -378,6 +380,8 @@ Editar
 /pacotes/crud-itens/<slug_do_item>/ --> Método PUT
 itens no json:
 - nome (String)
+- preco (float)
+- descricao (String)
 
 conteudo de autorização:
 - Authorization (String)

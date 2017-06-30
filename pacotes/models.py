@@ -9,9 +9,10 @@ class Pacote(models.Model):
                   ('regional', 'Regional'))
     restricoes = models.CharField('Tipo do Pacote', choices=RESTRICOES, max_length = 50)
     preco = models.FloatField('Preço do Pacote')
-    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique_with=('preco'), unique=True)
+    slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
     dono = models.ForeignKey(Usuario, verbose_name = 'Dono do Pacote', related_name = 'pacotes')
     codigo = models.CharField('Código do Pacote', max_length=5, unique=True)
+    codigo_pag_seguro = models.CharField('Código do Pag Seguro', max_length=32, unique=True)
 
     # itens = models.ManyToManyField(Item, verbose_name='Itens do pacote', related_name = 'itens')
     # seria um ManyToManyField com ItemPacote, mas sem o id do Pacote como está, apenas o item e a qtde (?)
@@ -25,6 +26,8 @@ class Pacote(models.Model):
 
 class Item(models.Model):
     nome = models.CharField('Nome do Item', max_length=200)
+    preco = models.FloatField('Preço do Item')
+    descricao = models.CharField('Descrição do Item', max_length=300, blank=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador do Item', related_name = 'itens')
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
 
