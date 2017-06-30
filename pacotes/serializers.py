@@ -13,7 +13,7 @@ class PacoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pacote
-        fields = ('id','slug', 'nome','quantidade_pessoas','restricoes','preco','dono','codigo','codigo_pag_seguro')
+        fields = ('id','slug', 'nome','quantidade_pessoas','preco','dono','codigo','codigo_pag_seguro')
         read_only_fields = ('id','slug')
 
 class ItemPacoteSerializer(serializers.ModelSerializer):
