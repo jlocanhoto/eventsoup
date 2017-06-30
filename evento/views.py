@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView, GenericAPIView
@@ -9,7 +10,11 @@ from .models import Evento, Endereco
 from .serializers import EventoSerializer, EventoPacoteSerializer, EventoRemoverPacoteSerializer, PacotesEventoSerializer, EnderecoSerializer, EnderecoCreateSerializer, EventoAtualizaEstatusSerializer
 from .permissions import EventoPermission, ListOwnerEventosPermission, EnderecoPermission
 
-from pacotes.serializers import PacoteSerializer
+from pacotes.serializers import PacoteSerializer, ItemPacoteSerializer
+from pacotes.views import GeradorCodigo
+from pacotes.models import Item
+
+from django.db import transaction
 
 class EventoViewSet(viewsets.ModelViewSet):
 
@@ -18,11 +23,85 @@ class EventoViewSet(viewsets.ModelViewSet):
     serializer_class = EventoSerializer
     permission_classes = [EventoPermission]
 
-    def perform_create(self, serializer):
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
         """
-        utilizado para adicionar o usuário que criou o evento como criador do evento
+        utilizado para adicionar os pacotes e os itens ao evento;
+        e o fornecedor do pacote como dono do pacote;
+        e o usuário logado como o criador do evento.
         """
-        serializer.save(criador=self.request.user)
+        sid = transaction.savepoint() # salva ponto da transação, caso ocorrer algum erro abaixo
+        evento_dict = request.data
+        pacote_dict = request.data['pacotes']
+        itens_dict = pacote_dict['itens']
+
+        evento_dict.pop('pacotes')
+
+        i = []
+
+        try:
+            pacote_dict['dono'] = pacote_dict['fornecedor']
+
+            pacote_dict['codigo'] = GeradorCodigo.codigo_pedido(pacote_dict['fornecedor'])
+            pacote_dict['codigo_pag_seguro'] = GeradorCodigo.codigo_pag_seguro()        
+
+            pacote_dict.pop('fornecedor')
+            pacote_dict.pop('itens')
+            print("AAA")
+            pacote = PacoteSerializer(data=pacote_dict)
+            
+            if pacote.is_valid():
+                pacote = pacote.save()
+                
+                itens = []
+                for item in itens_dict:
+                    try:
+                        item_aux = get_object_or_404(Item, id=item['id'])
+                        
+                        item['item'] = item_aux.id
+                        item['pacote'] = pacote.id
+                        item.pop('id')
+                        item_salvo = ItemPacoteSerializer(data=item)
+                        
+                        if item_salvo.is_valid():
+                            itens.append(item_salvo)
+                        else:
+                            raise Exception()
+                            
+                    except Http404:
+                        transaction.savepoint_rollback(sid) # deleta o pacote caso o item solicitado nao for encontrado
+                        return Response({'message': 'Item não encontrado', 'item': item['id']}, status=404)
+                    except Exception:
+                        transaction.savepoint_rollback(sid) # deleta o pacote caso houver algum erro com o item
+                        return Response({'message': 'Erro em Item', 'item': item['id']}, status=404)
+                    
+                for item in itens:
+                    if item.is_valid():
+                        it = item.save()
+                        i.append(it)
+            else:
+                transaction.savepoint_rollback(sid)
+                return Response({'message': 'Erro no pacote'}, status=400)
+
+        except Http404:
+            transaction.savepoint_rollback(sid) # deleta qualquer inserção da transição caso houver algum erro 404
+            return Response({'message': 'Fornecedor não encontrado'}, status=404)
+        except Exception:
+            transaction.savepoint_rollback(sid) # deleta qualquer inserção da transição caso houver algum erro
+            return Response({'message': 'Erro na criação'}, status=400)
+
+        serializer = EventoSerializer(data=request.data)
+        print("BBB")
+        if serializer.is_valid():
+            serializer = serializer.save(criador=self.request.user)
+            serializer.pacotes.add(pacote)
+            
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=201, headers=headers)
+        else:
+            print(serializer.errors)
+            transaction.savepoint_rollback(sid)
+            return Response({'message': 'Erro na criação'}, status=400)
 
     def get_queryset(self):
         try:
