@@ -1,7 +1,9 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie	
 from django.shortcuts import render
-from django.http import HttpResponse
+
+import json
+from django.http import JsonResponse
 
 from . import transaction
 
@@ -10,8 +12,7 @@ import requests
 @csrf_exempt
 def comprar(request):
     context = transaction.get_redirect_code()
-
-    return HttpResponse(str(context))
+    return JsonResponse(context)
 
 @csrf_exempt
 def notificacao(request):
