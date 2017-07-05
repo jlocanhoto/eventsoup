@@ -47,7 +47,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     nome = models.CharField('Nome', max_length = 100)
     email = models.EmailField('Email', unique = True)
     telefone = models.CharField('Telefone', max_length = 30)
-    celular = models.CharField('Celular', max_length = 30)
+    celular = models.CharField('Celular', max_length = 30, null=True, blank=True)
     cpf_cnpj = models.CharField('CPF/CNPJ', max_length = 30, unique = True)
     is_staff = models.BooleanField('Staff status',default=False)
     is_active = models.BooleanField('Ativo', default=True)
