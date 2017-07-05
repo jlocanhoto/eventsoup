@@ -10,5 +10,6 @@ router.register(r'crud-itens', views.ItemViewSet)
 urlpatterns = [
     url(r'list-all-pacotes/$', views.ListPacotes.as_view(),name = 'list-all-pacotes'),
     url(r'pacote-selecionado/(?P<slug>[^/.]+)', views.PacoteSelecionado.as_view(), name='pacote-selecionado'),
+    url(r'my-pacotes/$', views.AllPacotes.as_view(), name='my-pacotes'),
     url(r'', include(router.urls)),
 ]

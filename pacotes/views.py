@@ -80,6 +80,9 @@ class ItemPacoteViewSet(viewsets.ModelViewSet):
         informado na url
         """
         pacote = get_object_or_404(Pacote, slug=self.kwargs.get('slug_pacote',''))
+        if self.request.user.is_superuser:
+            return ItemPacote.objects.all()
+
         return ItemPacote.objects.filter(pacote=pacote)
 
     def perform_create(self, serializer):
@@ -95,15 +98,59 @@ class ListPacotes(ListAPIView):
     model = Pacote
     queryset = Pacote.objects.all()
 
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Pacote.objects.all()
+
+        return Pacote.objects.filter(dono=self.request.user)
+
+class AllPacotes(APIView):
+    def get(self, request):
+        if self.request.user.is_superuser:
+            pacotes = Pacote.objects.all()
+        else:
+            pacotes = Pacote.objects.filter(dono=self.request.user)
+
+        content = []
+        for pacote in pacotes:
+            # filtrar pacotes dos eventos que ja confirmaram o pagamento (pag_seguro)
+            item_pacotes = ItemPacote.objects.filter(pacote=pacote)
+            lista = [x.item_as_json() for x in item_pacotes]       
+            if len(pacote.pacotes.all()) > 0:
+                evento = pacote.pacotes.get()
+                try:
+                    endereco = evento.endereco.as_json()
+                except:
+                    endereco = 'não informado'
+                content_i = {
+                                'evento': {
+                                    'endereco': endereco,
+                                    'data': evento.data,
+                                    'status': evento.entregue
+                                },
+                                'pacote': pacote.as_json(),
+                                'itens': lista
+                            }
+                content.append(content_i)
+            else:
+                content_i = {
+                                'evento': 'não encontrado',
+                                'pacote': pacote.as_json(),
+                                'itens': lista
+                            }
+                content.append(content_i)
+
+        return Response(content)
+
 class PacoteSelecionado(APIView):
     
     def get(self, request, slug):
-        pacote = get_object_or_404(Pacote, slug=slug)
+        pacote = get_object_or_404(Pacote, slug=slug, dono=self.request.user)
         item_pacotes = ItemPacote.objects.filter(pacote=pacote)
 
         lista = [x.item.as_json() for x in item_pacotes]
         
-        content = {'code': pacote.codigo, 'itens': lista}
+        content = {'codigo': pacote.codigo, 'codigo-pag-seguro': pacote.codigo_pag_seguro, 'itens': lista}
 
         return Response(content)
 

@@ -24,6 +24,18 @@ class Pacote(models.Model):
     def __str__(self):
         return str(self.nome)
 
+    def as_json(self):
+        return dict(
+                id=self.id,
+                slug=self.slug,
+                nome=self.nome,
+                quantidade_pessoas=self.quantidade_pessoas,
+                preco=self.preco,
+                dono=self.dono.id,
+                codigo=self.codigo,
+                codigo_pag_seguro=self.codigo_pag_seguro
+            )
+
 class Item(models.Model):
     nome = models.CharField('Nome do Item', max_length=200)
     preco = models.FloatField('Preço do Item')
@@ -58,3 +70,13 @@ class ItemPacote(models.Model):
 
     def __str__(self):
         return str(self.item) + " (" + str(self.quantidade_item) + ")"
+
+    def item_as_json(self):
+        return dict(
+                id=self.item.id,
+                slug=self.item.slug,
+                nome=self.item.nome,
+                preco_item=self.item.preco,
+                descricao_item=self.item.descricao,
+                quantidade_item=self.quantidade_item
+            )
