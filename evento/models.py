@@ -15,7 +15,7 @@ class Evento(models.Model):
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador', related_name = 'eventos')
     entregue = models.BooleanField('Pacote entregue ao evento', default=False)
-    estatus = models.CharField('Estatus da compra', max_length=40, default="Aguardando pagamento")
+    status = models.CharField('Status da compra', max_length=40, default="Aguardando pagamento")
     pacotes = models.ManyToManyField(Pacote, verbose_name='Pacotes do evento', related_name = 'pacotes')
 
     class Meta:
@@ -37,3 +37,13 @@ class Endereco(models.Model):
     class Meta:
         verbose_name = 'Endereço'
         verbose_name_plural = 'Endereços'
+
+    def as_json(self):
+        return dict(
+                rua=self.rua,
+                bairro=self.bairro,
+                cidade=self.cidade,
+                estado=self.estado,
+                cep=self.cep,
+                numero=self.numero
+            )

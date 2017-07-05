@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Evento, Endereco
-from .serializers import EventoSerializer, EventoPacoteSerializer, EventoRemoverPacoteSerializer, PacotesEventoSerializer, EnderecoSerializer, EnderecoCreateSerializer, EventoAtualizaEstatusSerializer
+from .serializers import EventoSerializer, EventoPacoteSerializer, EventoRemoverPacoteSerializer, PacotesEventoSerializer, EnderecoSerializer, EnderecoCreateSerializer, EventoAtualizaStatusSerializer
 from .permissions import EventoPermission, ListOwnerEventosPermission, EnderecoPermission
 
 from pacotes.serializers import PacoteSerializer, ItemPacoteSerializer
@@ -34,8 +34,10 @@ class EventoViewSet(viewsets.ModelViewSet):
         evento_dict = request.data
         pacote_dict = request.data['pacotes']
         itens_dict = pacote_dict['itens']
+        endereco_dict = request.data['endereco']
 
         evento_dict.pop('pacotes')
+        evento_dict.pop('endereco')
 
         i = []
 
@@ -90,11 +92,17 @@ class EventoViewSet(viewsets.ModelViewSet):
             transaction.savepoint_rollback(sid) # deleta qualquer inserção da transição caso houver algum erro
             return Response({'message': 'Erro na criação'}, status=400)
 
+        endereco = EnderecoSerializer(data=endereco_dict)
         serializer = EventoSerializer(data=request.data)
-        print("BBB")
+        
         if serializer.is_valid():
             serializer = serializer.save(criador=self.request.user)
             serializer.pacotes.add(pacote)
+            if endereco.is_valid():
+                endereco.save(evento=serializer)
+            else:
+                transaction.savepoint_rollback(sid)
+                return Response({'message': 'Erro no endereco'}, status=400)
             
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=201, headers=headers)
@@ -205,12 +213,12 @@ class ConfirmaEntregaEvento(APIView):
 
 
 
-class EventoAtualizaEstatus(UpdateAPIView):
+class EventoAtualizaStatus(UpdateAPIView):
 
     lookup_field = 'slug'
     model = Evento
     # queryset = Evento.objects.all()
-    serializer_class = EventoAtualizaEstatusSerializer
+    serializer_class = EventoAtualizaStatusSerializer
     permission_classes = [EventoPermission]
 
     def get_object(self):
