@@ -249,6 +249,14 @@ Modelo do json:
 	"data": "yyyy-mm-ddTHH:MM:SSZ",
 	"orcamento": orcamento,
 	"descricao": "descricao_do_evento",
+	"endereco": {
+		"rua": "rua_do_evento",
+		"bairro": "bairro_do_evento",
+		"cidade": "cidade_do_evento",
+		"estado": "estado_do_evento",
+		"cep": "cep_do_evento",
+		"numero": "numero_do_evento"
+	},
 	"pacotes": {
 		"nome": "nome_do_pacote",
 		"quantidade_pessoas": quantidade_pessoas,
@@ -264,7 +272,7 @@ Modelo do json:
 	}
 }
 ```
-Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float.
+Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço em String.
 
 Ver informações
 ```
