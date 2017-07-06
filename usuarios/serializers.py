@@ -7,8 +7,8 @@ class FornecedorBuffetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FornecedorBuffet
-        fields = ('slug', 'nome','email','telefone','celular','cpf_cnpj','faz_entrega','endereco')
-        read_only_fields = ('slug','endereco')
+        fields = ('id','slug', 'nome','email','telefone','celular','cpf_cnpj','faz_entrega','endereco')
+        read_only_fields = ('id','slug','endereco')
 
 class FornecedorBuffetCreateSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(label='Senha', write_only=True)
@@ -43,8 +43,8 @@ class ContratanteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contratante
-        fields = ('slug', 'nome','email','telefone','celular','cpf_cnpj','endereco')
-        read_only_fields = ('slug','endereco')
+        fields = ('id','slug', 'nome','email','telefone','celular','cpf_cnpj','endereco')
+        read_only_fields = ('id','slug','endereco')
 
 class ContratanteCreateSerializer(FornecedorBuffetCreateSerializer):
 
