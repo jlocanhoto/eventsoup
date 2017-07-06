@@ -4,23 +4,23 @@ import json
 
 from django.conf import settings
 
-def get_redirect_code( ):
+def get_redirect_code(data):
     data = {
         'email': settings.EMAIL,
         'token': settings.TOKEN_ACCOUNT,
         'currency': 'BRL',
         'itemId1': '0001',
-        'itemDescription1': 'Pacote Expresso',
-        'itemAmount1': '525.00',
+        'itemDescription1': data.pacote,
+        'itemAmount1': data.orcamento,
         'itemQuantity1': '1',
         'senderName': 'Nilson de Lima Jr.',
         'senderAreaCode': '81',
-        'senderPhone': '987288049',
-        'senderEmail': 'nlj@sandbox.pagseguro.com.br',
-        'senderCPF': '09783502433',
+        'senderPhone': data.contato,
+        'senderEmail': data.email+'@sandbox.pagseguro.com.br',
+        'senderCPF': data.cpf,
         'shippingAddressRequired': 'false',
         'acceptPaymentMethodGroup': 'CREDIT_CARD,BOLETO,EFT',
-        'extraAmount': '15.45',
+        'extraAmount': 0.03*data.orcamento,
     }
 
     r = requests.post(settings.CHECKOUT, data = data)
