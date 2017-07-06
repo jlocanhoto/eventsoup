@@ -13,7 +13,7 @@ def get_redirect_code(data):
         'itemDescription1': data.pacote,
         'itemAmount1': data.orcamento,
         'itemQuantity1': '1',
-        'senderName': 'Nilson de Lima Jr.',
+        'senderName': data.nome,
         'senderAreaCode': '81',
         'senderPhone': data.contato,
         'senderEmail': data.email+'@sandbox.pagseguro.com.br',
