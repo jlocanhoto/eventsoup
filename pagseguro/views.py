@@ -24,4 +24,4 @@ def notificacao(request):
         notification = transaction.get_notification(dataPost['notificationCode'])
         print(notification)
 
-    # return render(request, 'notificacao/index.html', {})
+    return render(request, 'notificacao/index.html', {})
