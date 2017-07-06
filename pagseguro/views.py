@@ -16,6 +16,7 @@ def comprar(request):
 
 @csrf_exempt
 def notificacao(request):
+	status=200
 
     if request.method == 'POST':
         request.encoding = 'ISO-8859-1'
@@ -23,5 +24,7 @@ def notificacao(request):
 
         notification = transaction.get_notification(dataPost['notificationCode'])
         print(notification)
+    else:
+    	status=404
 
-    return render(request, 'notificacao/index.html', {})
+    return JsonResponse({'status':status})
