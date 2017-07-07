@@ -96,11 +96,7 @@ class EventoViewSet(viewsets.ModelViewSet):
         serializer = EventoSerializer(data=request.data)
         
         if serializer.is_valid():
-            status=request.data['status']
-            if status == "":
-                serializer = serializer.save(criador=self.request.user, codigo_pag_seguro=request.data['codigo_pag_seguro'])
-            else:
-                serializer = serializer.save(criador=self.request.user, codigo_pag_seguro=request.data['codigo_pag_seguro'], status=status)
+            serializer = serializer.save(criador=self.request.user, codigo_pag_seguro=request.data['codigo_pag_seguro'])
             serializer.pacotes.add(pacote)
             if endereco.is_valid():
                 endereco.save(evento=serializer)
@@ -117,16 +113,18 @@ class EventoViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
+            # print("eventos")
             eventos = Evento.objects.filter(criador=self.request.user)
+            
             if len(eventos) > 0:
                 content = []
                 for evento in eventos:
                     content.append(evento.as_json())
                 return Response(content)
             else:
-                return []
+                return Response({'message': 'Nenhum evento encontrado.'}, status=400)
         except:
-            return []
+            return Response({'message': 'erro'}, status=400)
 
 class ListOwnerEventos(ListAPIView):
     permission_classes = [ListOwnerEventosPermission]

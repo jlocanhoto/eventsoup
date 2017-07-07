@@ -9,7 +9,8 @@ class ItemPermission(BasePermission):
         if request.user.is_staff:
             return True
         if request.method == 'POST':
-            return (type(request.user)==FornecedorBuffet) and request.user.is_authenticated
+            # print(isinstance(request.user, FornecedorBuffet))
+            return request.user and request.user.is_authenticated
         if request.method in ('GET', 'HEAD', 'OPTIONS'):
             return True
         if request.method in ('PUT', 'DELETE','PATCH'):

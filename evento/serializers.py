@@ -8,7 +8,7 @@ class EventoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
         fields = ('slug', 'nome','quantidade_pessoas','data','orcamento','descricao','criador','entregue','pacotes','endereco','status','codigo_pag_seguro')
-        read_only_fields = ('slug','criador','entregue','pacotes','endereco','status','codigo_pag_seguro')
+        read_only_fields = ('slug','criador','entregue','pacotes','endereco','codigo_pag_seguro')
 
 class EventoAtualizaStatusSerializer(serializers.ModelSerializer):
     # endereco = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
