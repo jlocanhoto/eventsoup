@@ -200,7 +200,7 @@ itens no json:
 - bairro (String)
 - cidade (String)
 - estado (String)
-- cep (boolean)
+- cep (String)
 - numero (String)
 ```
 Ver informações do(s) endereço(s)
@@ -218,7 +218,7 @@ itens no json:
 - bairro (String)
 - cidade (String)
 - estado (String)
-- cep (boolean)
+- cep (String)
 - numero (String)
 
 conteudo de autorização:
@@ -355,12 +355,12 @@ itens no json:
 - bairro (String)
 - cidade (String)
 - estado (String)
-- cep (boolean)
+- cep (String)
 - numero (String)
 ```
-Ver informações do(s) endereço(s)
+Ver informações do endereço
 ```
-/eventos/crud-endereco-evento/<slug_do_evento>/<id_do_endereço>/ --> Método GET
+/eventos/crud-endereco-evento/<slug_do_evento>/ --> Método GET
 conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
@@ -373,7 +373,7 @@ itens no json:
 - bairro (String)
 - cidade (String)
 - estado (String)
-- cep (boolean)
+- cep (String)
 - numero (String)
 
 conteudo de autorização:
