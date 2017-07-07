@@ -8,5 +8,6 @@ router.register(r'crud-usuario-endereco', views.EnderecoViewSet)
 router.register(r'crud-contratante', views.ContratanteViewSet)
 
 urlpatterns = [
+    url(r'^verifica-autenticacao/$', views.VerificarAutenticacao.as_view(), name="verifica-autenticacao"),
     url(r'', include(router.urls)),
 ]

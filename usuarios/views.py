@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 from rest_framework import viewsets
+from rest_framework.generics import RetrieveAPIView
 
 from .models import FornecedorBuffet, Contratante, Endereco
 from .serializers import FornecedorBuffetSerializer, FornecedorBuffetCreateSerializer, ContratanteSerializer, ContratanteCreateSerializer, EnderecoSerializer, EnderecoCreateSerializer
-from .permissions import UsuarioPermission, EnderecoPermission
+from .permissions import UsuarioPermission, EnderecoPermission, VerificarAutenticacaoPermission
 from .models import Usuario
 
 class FornecedorBuffetViewSet(viewsets.ModelViewSet):
@@ -57,3 +59,9 @@ class EnderecoViewSet(viewsets.ModelViewSet):
             serializer_class = EnderecoCreateSerializer
 
         return serializer_class
+
+class VerificarAutenticacao(RetrieveAPIView):
+    permission_classes = [VerificarAutenticacaoPermission]
+
+    def retrieve(self, request, *args, **kwargs):
+        return JsonResponse({'message': 'OK'})

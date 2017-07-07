@@ -31,3 +31,11 @@ class EnderecoPermission(BasePermission):
             except:
                 return False
         return False
+
+class VerificarAutenticacaoPermission(BasePermission):
+    
+    def has_permission(self, request, view):
+        if request.method == 'GET':
+            return request.user and request.user.is_authenticated()
+
+        return False
