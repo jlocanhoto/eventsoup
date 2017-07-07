@@ -16,6 +16,8 @@ class Evento(models.Model):
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador', related_name = 'eventos')
     entregue = models.BooleanField('Pacote entregue ao evento', default=False)
     status = models.CharField('Status da compra', max_length=40, default="Aguardando pagamento")
+    codigo_pag_seguro = models.CharField('Código de transação do Pag Seguro', max_length=45, unique=True)
+
     pacotes = models.ManyToManyField(Pacote, verbose_name='Pacotes do evento', related_name = 'pacotes')
 
     class Meta:
@@ -24,6 +26,22 @@ class Evento(models.Model):
 
     def __str__(self):
         return str(self.nome) or str(self.cpf_cnpj) or str(self.email)
+    
+    def as_json(self):
+        return dict(
+                slug=self.slug,
+                nome=self.nome,
+                quantidade_pessoas=self.quantidade_pessoas,
+                data=self.data.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                orcamento=self.orcamento,
+                descricao=self.descricao,
+                criador=self.criador.id,
+                entregue=str(self.entregue),
+                status=self.status,
+                codigo_pag_seguro=self.codigo_pag_seguro,
+                pacotes=[p.id for p in self.pacotes.all()],
+                endereco=self.endereco.as_json()
+            )
 
 class Endereco(models.Model):
     rua = models.CharField('Rua', max_length = 250)

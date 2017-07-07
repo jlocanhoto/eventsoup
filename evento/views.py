@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.http import Http404
+from django.http import Http404, JsonResponse
 
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView, GenericAPIView
@@ -45,7 +45,7 @@ class EventoViewSet(viewsets.ModelViewSet):
             pacote_dict['dono'] = pacote_dict['fornecedor']
 
             pacote_dict['codigo'] = GeradorCodigo.codigo_pedido(pacote_dict['fornecedor'])
-            pacote_dict['codigo_pag_seguro'] = GeradorCodigo.codigo_pag_seguro()        
+            # pacote_dict['codigo_pag_seguro'] = GeradorCodigo.codigo_pag_seguro()        
 
             pacote_dict.pop('fornecedor')
             pacote_dict.pop('itens')
@@ -96,7 +96,7 @@ class EventoViewSet(viewsets.ModelViewSet):
         serializer = EventoSerializer(data=request.data)
         
         if serializer.is_valid():
-            serializer = serializer.save(criador=self.request.user)
+            serializer = serializer.save(criador=self.request.user, codigo_pag_seguro=request.data['codigo_pag_seguro'])
             serializer.pacotes.add(pacote)
             if endereco.is_valid():
                 endereco.save(evento=serializer)
@@ -111,9 +111,16 @@ class EventoViewSet(viewsets.ModelViewSet):
             transaction.savepoint_rollback(sid)
             return Response({'message': 'Erro na criação'}, status=400)
 
-    def get_queryset(self):
+    def list(self, request, *args, **kwargs):
         try:
-            return Evento.objects.filter(criador=self.request.user)
+            eventos = Evento.objects.filter(criador=self.request.user)
+            if len(eventos) > 0:
+                content = []
+                for evento in eventos:
+                    content.append(evento.as_json())
+                return Response(content)
+            else:
+                return []
         except:
             return []
 
