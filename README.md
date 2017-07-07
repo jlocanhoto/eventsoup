@@ -265,7 +265,7 @@ Modelo do json:
 		"itens": [
 			{
 				"id": id_item_1,
-				"quantidade_ite": quantidade_item_1
+				"quantidade_item": quantidade_item_1
 			},
 			//...
 		]
@@ -274,12 +274,47 @@ Modelo do json:
 ```
 Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço em String.
 
-Ver informações
+Ver informações de um evento
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método GET
 conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Ver informações de todos os eventos
+/eventos/crud-eventos/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+Modelo json de retorno:
+```json
+[
+    {
+        "slug": "nome_do_evento",
+        "nome": "nome_do_evento",
+        "quantidade_pessoas": quantidade_pessoas,
+        "data": "yyyy-mm-ddTHH:MM:SSZ",
+        "orcamento": orcamento,
+        "descricao": "descricao_do_evento",
+        "criador": criador_id,
+        "entregue": "False",
+        "status": "status_pagamento",
+        "codigo_pag_seguro": "codigo_da_transacao_do_pag_seguro(32 dígitos sem hífen)",
+        "pacotes": [
+            pacote_1_id,
+            //...
+        ],
+        "endereco": {
+            "rua": "rua_do_evento",
+            "bairro": "bairro_do_evento",
+            "cidade": "cidade_do_evento",
+            "estado": "estado_do_evento",
+            "cep": "cep_do_evento",
+            "numero": "ndo_evento"
+        }
+    },
+    //...
+]
 ```
 Editar
 ```
