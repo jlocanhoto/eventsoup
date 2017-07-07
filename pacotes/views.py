@@ -14,6 +14,8 @@ from .models import Item, Pacote, ItemPacote
 from .serializers import ItemSerializer, PacoteSerializer, ItemPacoteSerializer
 from .permissions import ItemPermission, PacotePermission, ItemPacotePermission
 
+from usuarios.models import FornecedorBuffet
+
 import hashlib
 from datetime import datetime
 
@@ -150,8 +152,35 @@ class PacoteSelecionado(APIView):
 
         lista = [x.item.as_json() for x in item_pacotes]
         
-        content = {'codigo': pacote.codigo, 'codigo-pag-seguro': pacote.codigo_pag_seguro, 'itens': lista}
+        content = {'codigo': pacote.codigo, 'itens': lista}
 
+        return Response(content)
+
+class PacotesDefault(APIView):
+    
+    def get(self, request):
+        fornecedores = FornecedorBuffet.objects.all()
+        i = len(fornecedores)
+        print(i)
+        content = []
+        cont = 0
+        for x in range(0, i):
+            if cont < 3:
+                print('entrou')
+                f = fornecedores[x]
+                print(f)
+                itens = f.itens.all()
+                print(itens)
+                if len(itens) > 0:
+                    lista = [x.as_json() for x in itens]
+                    content_i = {
+                        'fornecedor': f.id,
+                        'itens': lista
+                    }
+                    content.append(content_i)
+                # else:
+
+        
         return Response(content)
 
 class LazyEncoder(DjangoJSONEncoder):
