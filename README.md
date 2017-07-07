@@ -249,6 +249,8 @@ Modelo do json:
 	"data": "yyyy-mm-ddTHH:MM:SSZ",
 	"orcamento": orcamento,
 	"descricao": "descricao_do_evento",
+    "status": "Paga",
+	"codigo_pag_seguro": "codigo_da_transacao_do_pag_seguro3(32 dígitos sem hífen)",
 	"endereco": {
 		"rua": "rua_do_evento",
 		"bairro": "bairro_do_evento",
