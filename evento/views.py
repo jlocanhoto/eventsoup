@@ -49,7 +49,7 @@ class EventoViewSet(viewsets.ModelViewSet):
 
             pacote_dict.pop('fornecedor')
             pacote_dict.pop('itens')
-            print("AAA")
+            # print("AAA")
             pacote = PacoteSerializer(data=pacote_dict)
             
             if pacote.is_valid():
@@ -96,7 +96,11 @@ class EventoViewSet(viewsets.ModelViewSet):
         serializer = EventoSerializer(data=request.data)
         
         if serializer.is_valid():
-            serializer = serializer.save(criador=self.request.user, codigo_pag_seguro=request.data['codigo_pag_seguro'])
+            status=request.data['status']
+            if status == "":
+                serializer = serializer.save(criador=self.request.user, codigo_pag_seguro=request.data['codigo_pag_seguro'])
+            else:
+                serializer = serializer.save(criador=self.request.user, codigo_pag_seguro=request.data['codigo_pag_seguro'], status=status)
             serializer.pacotes.add(pacote)
             if endereco.is_valid():
                 endereco.save(evento=serializer)
