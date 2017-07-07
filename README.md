@@ -347,6 +347,7 @@ a string de autorização deve começar com "JWT" seguido de espaço e o token r
 
 ## Endereço para evento
 Criar
+A CRIAÇÃO DO ENDEREÇO PARA O EVENTO ESTÁ SENDO FEITO NA CRIAÇÃO DO EVENTO.
 ```
 /eventos/crud-endereco-evento/<slug_do_evento>/ --> Método POST
 itens no json:
