@@ -276,6 +276,8 @@ Modelo do json:
 ```
 Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço em String.
 
+O campo de 'status' é opcional, caso não seja enviado, o valor padrão será "Aguardando Pagamento"
+
 Ver informações de um evento
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método GET
@@ -283,7 +285,7 @@ conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
-Ver informações de todos os eventos
+Ver informações de o historico dos eventos ordenados por data (data do evento menor que a data de hoje)
 /eventos/crud-eventos/ --> Método GET
 conteudo de autorização:
 - Authorization (String)
@@ -318,6 +320,12 @@ Modelo json de retorno:
     //...
 ]
 ```
+Ver informações de todos os proximos eventos (data do evento maior que a data de hoje)
+/eventos/proximos-eventos/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+Mesmo modelo do json de retorno anterior
 Editar
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método PUT
