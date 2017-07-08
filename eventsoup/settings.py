@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'usuarios',
     'evento',
     'pacotes',
+
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
