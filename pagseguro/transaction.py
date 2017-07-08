@@ -10,20 +10,21 @@ def get_redirect_code(data):
         'token': settings.TOKEN_ACCOUNT,
         'currency': 'BRL',
         'itemId1': '0001',
-        'itemDescription1': data.pacote,
-        'itemAmount1': data.orcamento,
+        'itemDescription1': data['pacote'],
+        'itemAmount1': data['orcamento'],
         'itemQuantity1': '1',
-        'senderName': data.nome,
+        'senderName': data['nome'],
         'senderAreaCode': '81',
-        'senderPhone': data.contato,
-        'senderEmail': data.email+'@sandbox.pagseguro.com.br',
-        'senderCPF': data.cpf,
+        'senderPhone': data['contato'],
+        'senderEmail': data['email']+'@sandbox.pagseguro.com.br',
+        'senderCPF': data['cpf'],
         'shippingAddressRequired': 'false',
         'acceptPaymentMethodGroup': 'CREDIT_CARD,BOLETO,EFT',
-        'extraAmount': 0.03*data.orcamento,
+        'extraAmount': format(0.03*float(data['orcamento']), '.2f'),
     }
 
     r = requests.post(settings.CHECKOUT, data = data)
+    print(r.text)
     code = xmltodict.parse(r.text)['checkout']['code']
 
     return {'checkoutCode': code}

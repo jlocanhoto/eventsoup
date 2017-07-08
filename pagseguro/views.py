@@ -11,8 +11,14 @@ import requests
 
 @csrf_exempt
 def comprar(request):
-    context = transaction.get_redirect_code()
-    return JsonResponse(context)
+
+	if request.method == 'POST':
+		request.encoding = 'UTF-8'
+		data = request.body.decode('UTF-8')
+		json_data = json.loads(data)
+		context = transaction.get_redirect_code(json_data)
+
+	return JsonResponse(context)
 
 @csrf_exempt
 def notificacao(request):
