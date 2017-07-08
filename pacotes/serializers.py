@@ -1,12 +1,14 @@
-from rest_framework import serializers
-from .models import Item, Pacote, ItemPacote
+from rest_framework import serializers, fields
+from .models import Item, Pacote, ItemPacote, MY_CHOICES
 
 
 class ItemSerializer(serializers.ModelSerializer):
 
+    categorias = fields.MultipleChoiceField(choices=MY_CHOICES)
+
     class Meta:
         model = Item
-        fields = ('id', 'slug', 'nome','preco','descricao')
+        fields = ('id', 'slug', 'nome','preco','descricao','categorias')
         read_only_fields = ('id', 'slug')
 
 class PacoteSerializer(serializers.ModelSerializer):

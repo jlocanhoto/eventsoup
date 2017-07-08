@@ -112,35 +112,42 @@ class AllPacotes(APIView):
             pacotes = Pacote.objects.all()
         else:
             pacotes = Pacote.objects.filter(dono=self.request.user)
-
+        
         content = []
         for pacote in pacotes:
-            # filtrar pacotes dos eventos que ja confirmaram o pagamento (pag_seguro)
-            item_pacotes = ItemPacote.objects.filter(pacote=pacote)
-            lista = [x.item_as_json() for x in item_pacotes]       
-            if len(pacote.pacotes.all()) > 0:
+            try:
                 evento = pacote.pacotes.get()
-                try:
-                    endereco = evento.endereco.as_json()
-                except:
-                    endereco = 'não informado'
-                content_i = {
-                                'evento': {
-                                    'endereco': endereco,
-                                    'data': evento.data,
-                                    'status': evento.entregue
-                                },
-                                'pacote': pacote.as_json(),
-                                'itens': lista
-                            }
-                content.append(content_i)
-            else:
-                content_i = {
-                                'evento': 'não encontrado',
-                                'pacote': pacote.as_json(),
-                                'itens': lista
-                            }
-                content.append(content_i)
+                if evento.status == "Paga": # filtrar pacotes dos eventos que ja confirmaram o pagamento (pag_seguro)                    
+                    item_pacotes = ItemPacote.objects.filter(pacote=pacote)
+                    lista = [x.item_as_json() for x in item_pacotes]       
+                    if len(pacote.pacotes.all()) > 0:
+                        evento = pacote.pacotes.get()
+                        try:
+                            endereco = evento.endereco.as_json()
+                        except:
+                            endereco = 'não informado'
+                        content_i = {
+                                        'evento': {                                            
+                                            'data': evento.data,
+                                            'entregue': evento.entregue,
+                                            'status_pagamento': evento.status,
+                                            'endereco': endereco
+                                        },
+                                        'pacote': pacote.as_json(),
+                                        'itens': lista
+                                    }
+                        content.append(content_i)
+                    else:
+                        content_i = {
+                                        'evento': 'não encontrado',
+                                        'pacote': pacote.as_json(),
+                                        'itens': lista
+                                    }
+                        content.append(content_i)
+                else:
+                    pass
+            except:
+                pass
 
         return Response(content)
 
@@ -157,7 +164,7 @@ class PacoteSelecionado(APIView):
         return Response(content)
 
 class PacotesDefault(APIView):
-    
+    # agrupar pacotes por categorias de itens
     def get(self, request):
         fornecedores = FornecedorBuffet.objects.all()
         i = len(fornecedores)

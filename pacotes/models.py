@@ -2,6 +2,12 @@ from django.db import models
 from autoslug import AutoSlugField
 from usuarios.models import Usuario
 
+from multiselectfield import MultiSelectField
+
+MY_CHOICES = (('expresso', 'Expresso'),
+              ('casual', 'Casual'),
+              ('festa', 'Festa'))
+
 class Pacote(models.Model):
     nome = models.CharField('Nome do Pacote', max_length=200)
     quantidade_pessoas = models.PositiveIntegerField('Quantidade de Pessoas')
@@ -32,7 +38,8 @@ class Pacote(models.Model):
                 quantidade_pessoas=self.quantidade_pessoas,
                 preco=self.preco,
                 dono=self.dono.id,
-                codigo=self.codigo
+                codigo=self.codigo,
+                itens=[i.item_as_json() for i in self.itens.all()]
             )
 
 class Item(models.Model):
@@ -41,6 +48,8 @@ class Item(models.Model):
     descricao = models.CharField('Descrição do Item', max_length=300, blank=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador do Item', related_name = 'itens')
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
+
+    categorias = MultiSelectField(choices=MY_CHOICES, max_choices=3)
 
     class Meta:
         verbose_name = 'Item'
@@ -56,7 +65,8 @@ class Item(models.Model):
                 nome=self.nome,
                 preco=self.preco,
                 descricao=self.descricao,
-                criador=self.criador.id
+                criador=self.criador.id,
+                categorias=self.categorias
             )
 
 class ItemPacote(models.Model):
@@ -77,7 +87,8 @@ class ItemPacote(models.Model):
                 id=self.item.id,
                 slug=self.item.slug,
                 nome=self.item.nome,
-                preco_item=self.item.preco,
-                descricao_item=self.item.descricao,
-                quantidade_item=self.quantidade_item
+                preco=self.item.preco,
+                descricao=self.item.descricao,
+                quantidade=self.quantidade_item,
+                categoria=self.item.categorias
             )
