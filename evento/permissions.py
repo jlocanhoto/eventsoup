@@ -18,7 +18,7 @@ class EventoPermission(BasePermission):
                 return False
         return False
 
-class ListOwnerEventosPermission(BasePermission):
+class ProximosEventosPermission(BasePermission):
     def has_permission(self, request, view):
         return request.user and request.user.is_authenticated
 

@@ -8,13 +8,15 @@ from rest_framework.response import Response
 
 from .models import Evento, Endereco
 from .serializers import EventoSerializer, EventoPacoteSerializer, EventoRemoverPacoteSerializer, PacotesEventoSerializer, EnderecoSerializer, EnderecoCreateSerializer, EventoAtualizaStatusSerializer
-from .permissions import EventoPermission, ListOwnerEventosPermission, EnderecoPermission
+from .permissions import EventoPermission, ProximosEventosPermission, EnderecoPermission
 
 from pacotes.serializers import PacoteSerializer, ItemPacoteSerializer
 from pacotes.views import GeradorCodigo
 from pacotes.models import Item
 
 from django.db import transaction
+
+from datetime import datetime
 
 class EventoViewSet(viewsets.ModelViewSet):
 
@@ -114,29 +116,34 @@ class EventoViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             # print("eventos")
-            eventos = Evento.objects.filter(criador=self.request.user)
-            
-            if len(eventos) > 0:
-                content = []
-                for evento in eventos:
-                    content.append(evento.as_json())
-                return Response(content)
-            else:
-                return Response({'message': 'Nenhum evento encontrado.'}, status=400)
+            # ordenado por data (TODOS OS EVENTOS)
+            eventos = Evento.objects.filter(criador=self.request.user).filter(data__lte=datetime.now()).order_by('data')
+            return montar_json_eventos(eventos)
         except:
             return Response({'message': 'erro'}, status=400)
 
-class ListOwnerEventos(ListAPIView):
-    permission_classes = [ListOwnerEventosPermission]
+class ProximosEventos(ListAPIView):
+    permission_classes = [ProximosEventosPermission]
     serializer_class = EventoSerializer
     model = Evento
     queryset = Evento.objects.all()
 
-    def get_queryset(self):
+    def list(self, request, *args, **kwargs):
         try:
-            return self.request.user.eventos.all()
+            # ordenado por data (APENAS OS EVENTOS APÓS A DATA ATUAL .now())
+            eventos = self.request.user.eventos.all().filter(data__gte=datetime.now()).order_by('data')
+            return montar_json_eventos(eventos)
         except:
-            return []
+            return Response({'message': 'erro'}, status=400)
+
+def montar_json_eventos(eventos):
+    if len(eventos) > 0:
+        content = []
+        for evento in eventos:
+            content.append(evento.as_json())
+        return Response(content)
+    else:
+        return Response({'message': 'Nenhum evento encontrado.'}, status=400)
 
 class EnderecoViewSet(viewsets.ModelViewSet):
 
