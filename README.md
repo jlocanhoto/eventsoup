@@ -249,8 +249,8 @@ Modelo do json:
 	"data": "yyyy-mm-ddTHH:MM:SSZ",
 	"orcamento": orcamento,
 	"descricao": "descricao_do_evento",
-    "status": "Paga",
-	"codigo_pag_seguro": "codigo_da_transacao_do_pag_seguro3(32 dígitos sem hífen)",
+    "status": "status_do_pagamento",
+	"codigo_pag_seguro": "codigo_da_transacao_do_pag_seguro(32 dígitos sem hífen)",
 	"endereco": {
 		"rua": "rua_do_evento",
 		"bairro": "bairro_do_evento",
@@ -274,7 +274,7 @@ Modelo do json:
 	}
 }
 ```
-Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço em String.
+Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço são Strings.
 
 O campo de 'status' é opcional, caso não seja enviado, o valor padrão será "Aguardando Pagamento"
 
@@ -285,27 +285,48 @@ conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
-Ver informações de o historico dos eventos ordenados por data (data do evento menor que a data de hoje)
+Ver o historico dos eventos ordenados por data (data do evento menor que a data de hoje)
+```
 /eventos/crud-eventos/ --> Método GET
 conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
 Modelo json de retorno:
 ```json
 [
     {
-        "slug": "nome_do_evento",
+        "slug": "slug_do_evento",
         "nome": "nome_do_evento",
         "quantidade_pessoas": quantidade_pessoas,
         "data": "yyyy-mm-ddTHH:MM:SSZ",
         "orcamento": orcamento,
         "descricao": "descricao_do_evento",
         "criador": criador_id,
-        "entregue": "False",
-        "status": "status_pagamento",
+        "entregue": "booleano",
+        "status": "status_do_pagamento",
         "codigo_pag_seguro": "codigo_da_transacao_do_pag_seguro(32 dígitos sem hífen)",
         "pacotes": [
-            pacote_1_id,
+            {
+                "id": pacote_id,
+                "slug": "slug_do_pacote",
+                "nome": "nome_do_pacote",
+                "quantidade_pessoas": quantidade_pessoas,
+                "preco": preco,
+                "dono": dono_id,
+                "codigo": "codigo_do_pacote(4 dígitos)",
+                "itens": [
+                    {
+                        "id": item_id,
+                        "slug": "slug_do_item",
+                        "nome": "nome_do_item",
+                        "preco": preco_item,
+                        "descricao": "descricao_do_item",
+                        "quantidade": quantidade_item
+                    },
+                    //...
+                ]
+            },
             //...
         ],
         "endereco": {
@@ -314,18 +335,73 @@ Modelo json de retorno:
             "cidade": "cidade_do_evento",
             "estado": "estado_do_evento",
             "cep": "cep_do_evento",
-            "numero": "ndo_evento"
+            "numero": "numero_do_evento(até 10 caracteres)"
         }
-    },
-    //...
+    }
 ]
 ```
-Ver informações de todos os proximos eventos (data do evento maior que a data de hoje)
+Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço são Strings.
+
+Ver todos os proximos eventos (data do evento maior que a data de hoje)
+```
 /eventos/proximos-eventos/ --> Método GET
 conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
-Mesmo modelo do json de retorno anterior
+```
+Mesmo modelo do json de retorno do histórico (ver acima)
+
+Ver os pacotes de um determinado evento
+```
+/eventos/pacotes-evento/<slug_do_evento>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Modelo do json de retorno:
+```json
+[
+    {
+        "id": pacote_id,
+        "slug": "slug_do_pacote",
+        "nome": "nome_do_pacote",
+        "quantidade_pessoas": quantidade_pessoas,
+        "preco": preco,
+        "dono": dono_id,
+        "codigo": "codigo_do_pacote(4 dígitos)",
+        "itens": [
+            {
+                "id": item_id,
+                "slug": "slug_do_item",
+                "nome": "nome_do_item",
+                "preco": preco,
+                "descricao": "descricao_do_item",
+                "quantidade": quantidade,
+                "categoria": [
+                    "categoria_1",
+                    //um ou mais...
+                ]
+            },
+            //...
+        ]
+    },
+    //...
+]
+```
+Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e preço do tipo Float. O item pode ter uma ou mais categorias, no máximo três.
+
+Confirmar entrega de um evento (a entrega dos pacotes)
+```
+/eventos/confirma-entrega-evento/ --> Método POST
+itens no json:
+- slug_evento (String)
+- tres_digitos_cpf_cnpj (String)
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+O campo 'tres_digitos_cpf_cnpj' por hora equivale apenas ao cpf do contratante.
+
 Editar
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método PUT
@@ -343,13 +419,6 @@ a string de autorização deve começar com "JWT" seguido de espaço e o token r
 Deletar
 ```
 /eventos/crud-eventos/<slug_do_evento>/ --> Método DELETE
-conteudo de autorização:
-- Authorization (String)
-a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
-```
-Listar eventos criados pelo usuário
-```
-/eventos/crud-eventos/list-owner-eventos/ --> Método GET
 conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
@@ -406,6 +475,7 @@ itens no json:
 - nome (String)
 - preco (float)
 - descricao (String)
+- categorias (Lista de String, Ex.: ["categoria"]) PS.: um item pode ter um ou mais categorias, no máximo três, dentre essas: Expresso, Casual e Festa.
 
 conteudo de autorização:
 - Authorization (String)
@@ -425,6 +495,7 @@ itens no json:
 - nome (String)
 - preco (float)
 - descricao (String)
+- categorias (Lista de String, Ex.: ["categoria"]) PS.: um item pode ter um ou mais categorias, no máximo três, dentre essas: Expresso, Casual e Festa.
 
 conteudo de autorização:
 - Authorization (String)
