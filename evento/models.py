@@ -39,7 +39,7 @@ class Evento(models.Model):
                 entregue=str(self.entregue),
                 status=self.status,
                 codigo_pag_seguro=self.codigo_pag_seguro,
-                pacotes=[p.id for p in self.pacotes.all()],
+                pacotes=[p.as_json() for p in self.pacotes.all()],
                 endereco=self.endereco.as_json()
             )
 

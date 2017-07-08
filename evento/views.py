@@ -117,7 +117,7 @@ class EventoViewSet(viewsets.ModelViewSet):
         try:
             # print("eventos")
             # ordenado por data (TODOS OS EVENTOS)
-            eventos = Evento.objects.filter(criador=self.request.user).filter(data__lte=datetime.now()).order_by('data')
+            eventos = Evento.objects.filter(criador=self.request.user).filter(data__lte=datetime.now()).order_by('-data')
             return montar_json_eventos(eventos)
         except:
             return Response({'message': 'erro'}, status=400)
@@ -197,35 +197,38 @@ class PacotesEvento(ListAPIView):
     serializer_class = PacoteSerializer
     permission_classes = [EventoPermission]
 
-    def get_queryset(self):
+    def list(self, request, *args, **kwargs):
         evento = get_object_or_404(Evento, slug=self.kwargs.get('slug',''))
-        return evento.pacotes.all()
+        content = [p.as_json() for p in evento.pacotes.all()]
+        return Response(content)
 
 class ConfirmaEntregaEvento(APIView):
 
     def post(self, request):
         slug_evento = request.data['slug_evento']
         cpf_cnpj_inicio = request.data['tres_digitos_cpf_cnpj']
-
+        content = {}
+        status=400
         if len(cpf_cnpj_inicio) == 3:
-            evento = evento = get_object_or_404(Evento, slug=slug_evento)
+            evento = get_object_or_404(Evento, slug=slug_evento)
 
             if evento.entregue == False:
                 if evento.criador.cpf_cnpj.startswith(cpf_cnpj_inicio):
-                    content = {'entregue': True, 'message': 'Event delivered'}
+                    content = {'entregue': True, 'message': 'Evento entregue'}
+                    status = 200
                     evento.entregue = True
                     evento.save()
                 else:
-                    content = {'entregue': False, 'message': 'Incorrect CPF'}
+                    content = {'entregue': False, 'message': 'CPF incorreto'}
             else:
-                content = {'entregue': True, 'message': 'Event already delivered'}
+                content = {'entregue': True, 'message': 'Evento já entregue'}
 
             # analisar se precisa persistir no banco a validação da "entrega" do pacote ao evento
 
-            return Response(content)
+            return Response(content, status=status)
 
         else:
-            return Response({'message': 'Must be the first three numbers of the CPF'}, status=400)
+            return Response({'message': 'Deve ser os três primeiros dígitos do CPF'}, status=status)
 
 
 
