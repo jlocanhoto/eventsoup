@@ -274,7 +274,7 @@ Modelo do json:
 	}
 }
 ```
-Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço são Strings.
+Aos valores  encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço são Strings.
 
 O campo de 'status' é opcional, caso não seja enviado, o valor padrão será "Aguardando Pagamento"
 
@@ -285,6 +285,8 @@ conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
+Mesmo modelo json visto abaixo, em histórico, porém apenas o evento, sem lista.
+
 Ver o historico dos eventos ordenados por data (data do evento menor que a data de hoje)
 ```
 /eventos/crud-eventos/ --> Método GET
@@ -303,7 +305,7 @@ Modelo json de retorno:
         "orcamento": orcamento,
         "descricao": "descricao_do_evento",
         "criador": criador_id,
-        "entregue": "booleano",
+        "entregue": booleano,
         "status": "status_do_pagamento",
         "codigo_pag_seguro": "codigo_da_transacao_do_pag_seguro(32 dígitos sem hífen)",
         "pacotes": [
@@ -322,7 +324,11 @@ Modelo json de retorno:
                         "nome": "nome_do_item",
                         "preco": preco_item,
                         "descricao": "descricao_do_item",
-                        "quantidade": quantidade_item
+                        "quantidade": quantidade_item,
+                        "categoria": [
+                            "categoria",
+                            // um ou mais...
+                        ]
                     },
                     //...
                 ]
@@ -340,7 +346,7 @@ Modelo json de retorno:
     }
 ]
 ```
-Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço são Strings.
+Aos valores  encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e orçamento e preço do tipo Float. Para o campo 'numero' do endereço, deve ser com tamanho de no máximo 10 caracteres, todos os campos de endereço são Strings. Um item do pacote pode ter uma ou mais categorias, no máximo três.
 
 Ver todos os proximos eventos (data do evento maior que a data de hoje)
 ```
@@ -388,7 +394,7 @@ Modelo do json de retorno:
     //...
 ]
 ```
-Aos valores dos itens encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e preço do tipo Float. O item pode ter uma ou mais categorias, no máximo três.
+Aos valores  encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e preço do tipo Float. Um item do pacote pode ter uma ou mais categorias, no máximo três.
 
 Confirmar entrega de um evento (a entrega dos pacotes)
 ```
@@ -508,6 +514,83 @@ conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
+
+## Pacotes do fornecedor
+Lista todos os pacotes do fornecedor, ordenados pela data do evento, independente de estar pago (histórico geral)
+```
+/list-all-pacotes/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Modelo json de retorno:
+```json
+[
+    {
+        "evento": {
+            "nome": "nome_do_evento",
+            "data": "yyyy-mm-ddTHH:MM:SSZ",
+            "entregue": booleano,
+            "status_pagamento": "status_do_pagamento",
+            "endereco": {
+                "rua": "rua_do_evento",
+                "bairro": "bairro_do_evento",
+                "cidade": "cidade_do_evento",
+                "estado": "estado_do_evento",
+                "cep": "cep_do_evento",
+                "numero": "numero_do_evento"
+            }
+        },
+        "pacotes": [
+            {
+                "id": pacote_id,
+                "slug": "slug_do_pacote",
+                "nome": "nome_do_pacote",
+                "quantidade_pessoas": quantidada_pessoas,
+                "preco": preco,
+                "dono": dono_id,
+                "codigo": "codigo_do_pacote(4 dígitos)",
+                "itens": [
+                    {
+                        "id": item_id,
+                        "slug": "slug_do_item",
+                        "nome": "slug_do_item",
+                        "preco": preco,
+                        "descricao": "descricao_do_item",
+                        "quantidade": quantidade,
+                        "categoria": [
+                            "categoria",
+                            // um ou mais...
+                        ]
+                    },
+                    //...
+                ]
+            },
+            //...
+        ]
+    },
+    //...
+]
+```
+Aos valores  encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's e quantidades são do tipo Inteiro, e preço do tipo Float. Um item do pacote pode ter uma ou mais categorias, no máximo três.
+
+Selecionar um pacote
+```
+/pacote-selecionado/<slug_do_pacote>/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Mesmo modelo json de retorno acima, porem apenas um pacote, sem lista.
+
+Retornar os pacotes do fornecedor ordenados por data do evento, se pagos e não entregues (proximas entregas)
+```
+/my-pacotes/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+Mesmo modelo json de retorno acima, porem apenas um pacote, sem lista.
 
 
 ## Evento e Pacotes (Rota depreciada)
