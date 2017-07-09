@@ -33,6 +33,7 @@ class EventoViewSet(viewsets.ModelViewSet):
         e o usuário logado como o criador do evento.
         """
         sid = transaction.savepoint() # salva ponto da transação, caso ocorrer algum erro abaixo
+        print(request.data)
         evento_dict = request.data
         pacote_dict = request.data['pacotes']
         itens_dict = pacote_dict['itens']
