@@ -430,6 +430,43 @@ conteudo de autorização:
 - Authorization (String)
 a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
 ```
+#### Agrupar pacotes por categorias de itens
+```
+/pacotes/pacotes-default/ --> Método GET
+conteudo de autorização:
+- Authorization (String)
+a string de autorização deve começar com "JWT" seguido de espaço e o token recibido no login
+```
+> Modelo do json de retorno:
+```json
+[
+    {
+        "fornecedor": fornecedor_id,
+        "pacotes": [
+            {
+                "Categoria": [
+                    {
+                        "id": item_id,
+                        "slug": "slug_do_item",
+                        "nome": "nome_do_item",
+                        "preco": preco,
+                        "descricao": "descricao_do_item",
+                        "criador": criador_id,
+                        "categorias": [
+                            "categoria"
+                            // um ou mais...
+                        ]
+                    },
+                    //...
+                ]
+            },
+            // demais categorias...
+        ]
+    },
+    // demais fornecedores
+]
+```
+> Aos valores  encontrados entre aspas duplas (" ") são do tipo String, aos referentes aos ID's são do tipo Inteiro, e preço do tipo Float. Um item do pacote pode ter uma ou mais categorias, no máximo três. Para cada fornecedor virá uma lista de pacotes, cada um com o nome da categoria, e em cada categoria os itens desse mesmo fornecedor que pertence a essa categoria.
 
 ## Endereço para evento
 #### Criar
