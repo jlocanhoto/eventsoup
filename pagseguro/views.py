@@ -6,6 +6,7 @@ import json
 from django.http import JsonResponse
 
 from . import transaction
+from evento.models import Evento
 
 import requests
 
@@ -30,6 +31,19 @@ def notificacao(request):
 
         notification = transaction.get_notification(dataPost['notificationCode'])
         print(notification)
+
+        try:
+            codigo_pag_seguro = notification['transactionCode']
+            status = notification['status']
+            
+            evento = Evento.objects.get(codigo_pag_seguro=codigo_pag_seguro)
+            evento.status = status
+
+            evento.save()
+        except:
+            print("Evento não encontrado")
+            pass
+
     else:
         status=404
 
