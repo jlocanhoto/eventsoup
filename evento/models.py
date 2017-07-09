@@ -14,7 +14,7 @@ class Evento(models.Model):
     descricao = models.CharField('Descrição', max_length=400, blank=True)
     slug = AutoSlugField('Slug', populate_from='nome', always_update=True, unique=True)
     criador = models.ForeignKey(Usuario, verbose_name = 'Criador', related_name = 'eventos')
-    entregue = models.BooleanField('Pacote entregue ao evento', default=False)
+    entregue = models.BooleanField('Pacote entregue ao evento', default=False) # (MUDAR QUANDO FOR ADICINOAR MAIS DE UM PACOTE POR EVENTO!)
     status = models.CharField('Status da compra', max_length=40, default="Aguardando pagamento")
     codigo_pag_seguro = models.CharField('Código de transação do Pag Seguro', max_length=45, unique=True)
 

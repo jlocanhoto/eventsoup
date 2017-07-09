@@ -115,12 +115,15 @@ class EventoViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            # print("eventos")
             # ordenado por data (TODOS OS EVENTOS)
             eventos = Evento.objects.filter(criador=self.request.user).filter(data__lte=datetime.now()).order_by('-data')
             return montar_json_eventos(eventos)
         except:
             return Response({'message': 'erro'}, status=400)
+
+    def retrieve(self, request, *args, **kwargs):
+        evento = get_object_or_404(Evento, slug=self.kwargs['slug'])
+        return Response(evento.as_json())
 
 class ProximosEventos(ListAPIView):
     permission_classes = [ProximosEventosPermission]
