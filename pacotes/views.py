@@ -177,10 +177,15 @@ class PacotesDefault(APIView):
         for fornecedor in fornecedores:
             pacotes = []
             for choices in MY_CHOICES:
-                choice = fornecedor.itens.filter(categorias__contains=choices[1])
-                if len(choice) > 0:
-                    d = {choices[1]: [item.as_json() for item in choice]}
-                    pacotes.append(d)
+                try:
+                    print(choices[1].lower())
+                    choice = fornecedor.itens.filter(categorias__contains=choices[1].lower())
+                    # print([item.categorias for item in choice])
+                    if len(choice) > 0:
+                        d = {choices[1]: [item.as_json() for item in choice]}
+                        pacotes.append(d)
+                except:
+                    print("erro na busca por itens do fornecedor %d" %fornecedor.id)
             if len(pacotes) > 0:
                 d = {
                     'fornecedor': fornecedor.id,
