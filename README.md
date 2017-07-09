@@ -250,7 +250,7 @@ Modelo do json:
 	"data": "yyyy-mm-ddTHH:MM:SSZ",
 	"orcamento": orcamento,
 	"descricao": "descricao_do_evento",
-    "status": "status_do_pagamento",
+    	"status": "status_do_pagamento",
 	"codigo_pag_seguro": "codigo_da_transacao_do_pag_seguro(32 dígitos sem hífen)",
 	"endereco": {
 		"rua": "rua_do_evento",
@@ -299,7 +299,7 @@ Modelo json de retorno:
 ```json
 [
     {
-        "slug": "slug_do_evento",
+	"slug": "slug_do_evento",
         "nome": "nome_do_evento",
         "quantidade_pessoas": quantidade_pessoas,
         "data": "yyyy-mm-ddTHH:MM:SSZ",
