@@ -10,7 +10,7 @@ from django.utils.encoding import force_text
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.serializers import serialize
 
-from .models import Item, Pacote, ItemPacote
+from .models import Item, Pacote, ItemPacote, MY_CHOICES
 from .serializers import ItemSerializer, PacoteSerializer, ItemPacoteSerializer
 from .permissions import ItemPermission, PacotePermission, ItemPacotePermission
 
@@ -173,26 +173,20 @@ class PacotesDefault(APIView):
     # agrupar pacotes por categorias de itens
     def get(self, request):
         fornecedores = FornecedorBuffet.objects.all()
-        i = len(fornecedores)
-        print(i)
         content = []
-        cont = 0
-        for x in range(0, i):
-            if cont < 3:
-                print('entrou')
-                f = fornecedores[x]
-                print(f)
-                itens = f.itens.all()
-                print(itens)
-                if len(itens) > 0:
-                    lista = [x.as_json() for x in itens]
-                    content_i = {
-                        'fornecedor': f.id,
-                        'itens': lista
-                    }
-                    content.append(content_i)
-                # else:
-
+        for fornecedor in fornecedores:
+            pacotes = []
+            for choices in MY_CHOICES:
+                choice = fornecedor.itens.filter(categorias__contains=choices[1])
+                if len(choice) > 0:
+                    d = {choices[1]: [item.as_json() for item in choice]}
+                    pacotes.append(d)
+            if len(pacotes) > 0:
+                d = {
+                    'fornecedor': fornecedor.id,
+                    'pacotes': pacotes
+                }
+                content.append(d)
         
         return Response(content)
 
