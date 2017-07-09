@@ -86,6 +86,7 @@ class EventoViewSet(viewsets.ModelViewSet):
                         i.append(it)
             else:
                 transaction.savepoint_rollback(sid)
+                print(pacote.errors)
                 return Response({'message': 'Erro no pacote'}, status=400)
 
         except Http404:
