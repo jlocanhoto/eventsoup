@@ -83,6 +83,7 @@ whitenoise==2.0.6
 djangorestframework-jwt==1.10.0
 django-cors-headers==2.1.0
 xmltodict==0.9.2
+django-multiselectfield
 ```
 
 # Rotas
