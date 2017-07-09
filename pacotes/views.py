@@ -100,68 +100,74 @@ class ListPacotes(ListAPIView):
     model = Pacote
     queryset = Pacote.objects.all()
 
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return Pacote.objects.all()
-
-        return Pacote.objects.filter(dono=self.request.user)
-
-class AllPacotes(APIView):
-    def get(self, request):
-        if self.request.user.is_superuser:
-            pacotes = Pacote.objects.all()
-        else:
-            pacotes = Pacote.objects.filter(dono=self.request.user)
-        
+    # lista todos os pacotes do fornecedor, ordenador pela data do evento, independente de estar pago
+    def list(self, request, *args, **kwargs): 
         content = []
-        for pacote in pacotes:
-            try:
-                evento = pacote.pacotes.get()
-                if evento.status == "Paga": # filtrar pacotes dos eventos que ja confirmaram o pagamento (pag_seguro)                    
-                    item_pacotes = ItemPacote.objects.filter(pacote=pacote)
-                    lista = [x.item_as_json() for x in item_pacotes]       
-                    if len(pacote.pacotes.all()) > 0:
-                        evento = pacote.pacotes.get()
-                        try:
-                            endereco = evento.endereco.as_json()
-                        except:
-                            endereco = 'não informado'
-                        content_i = {
-                                        'evento': {                                            
-                                            'data': evento.data,
-                                            'entregue': evento.entregue,
-                                            'status_pagamento': evento.status,
-                                            'endereco': endereco
-                                        },
-                                        'pacote': pacote.as_json(),
-                                        'itens': lista
-                                    }
-                        content.append(content_i)
-                    else:
-                        content_i = {
-                                        'evento': 'não encontrado',
-                                        'pacote': pacote.as_json(),
-                                        'itens': lista
-                                    }
-                        content.append(content_i)
-                else:
-                    pass
-            except:
-                pass
+        eventos = eventos_dos_pacotes(self)
+
+        if len(eventos) > 0:
+            eventos.sort(key=lambda x: x.data, reverse=False) # eventos ordenados por data de acontecimento
+            content = montar_json_pacotes(self, eventos)
 
         return Response(content)
+
+class AllPacotes(APIView):
+
+    # retorna os pacotes do fornecedor ordenados por data do evento, se pagos e não entregues
+    def get(self, request):        
+        content = []
+        eventos = eventos_dos_pacotes(self)
+        
+        if len(eventos) > 0:
+            eventos.sort(key=lambda x: x.data, reverse=False) # eventos ordenados por data de acontecimento
+            eventos = list(filter(lambda x: (x.status=="Paga" and x.entregue==False), eventos))
+            content = montar_json_pacotes(self, eventos)
+
+        return Response(content)
+
+def eventos_dos_pacotes(self):
+    eventos = []
+
+    if self.request.user.is_superuser:
+        pacotes = Pacote.objects.all()
+    else:
+        pacotes = Pacote.objects.filter(dono=self.request.user)
+
+    for pacote in pacotes:
+        try:
+            evento = pacote.pacotes.get()
+            eventos.append(evento)
+        except:
+            pass
+
+    return eventos
+
+def montar_json_pacotes(self, eventos):
+    content = []
+    for evento in eventos:
+        try:
+            endereco = evento.endereco.as_json()
+        except:
+            endereco = 'não informado'
+        content_i = {
+                        'evento': {
+                            'nome': evento.nome,                                        
+                            'data': evento.data,
+                            'entregue': evento.entregue,
+                            'status_pagamento': evento.status,
+                            'endereco': endereco
+                        },
+                        'pacotes': [pacote.as_json() for pacote in evento.pacotes.all() if pacote.dono==self.request.user]
+                    }
+        content.append(content_i)
+    return content
 
 class PacoteSelecionado(APIView):
     
     def get(self, request, slug):
-        pacote = get_object_or_404(Pacote, slug=slug, dono=self.request.user)
-        item_pacotes = ItemPacote.objects.filter(pacote=pacote)
+        pacote = get_object_or_404(Pacote, slug=slug)
 
-        lista = [x.item.as_json() for x in item_pacotes]
-        
-        content = {'codigo': pacote.codigo, 'itens': lista}
-
-        return Response(content)
+        return Response(pacote.as_json())
 
 class PacotesDefault(APIView):
     # agrupar pacotes por categorias de itens
